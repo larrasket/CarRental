@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services", "Services\Services.csproj", "{1012E9ED-8A53-4765-B5A8-21AA575D268F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{86537E9D-A9C7-4D08-BC28-0914B6EB2089}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Models", "Models\Models.csproj", "{30E001D0-3611-4C11-A3BA-6D06CC71C4AC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Clients", "Clients", "{C718FF17-184C-4282-B8D2-7F989CB58497}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DummyConsole", "DummyConsole\DummyConsole.csproj", "{62136D48-A54E-49D6-B669-FF8FE0453772}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1012E9ED-8A53-4765-B5A8-21AA575D268F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1012E9ED-8A53-4765-B5A8-21AA575D268F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1012E9ED-8A53-4765-B5A8-21AA575D268F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1012E9ED-8A53-4765-B5A8-21AA575D268F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30E001D0-3611-4C11-A3BA-6D06CC71C4AC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30E001D0-3611-4C11-A3BA-6D06CC71C4AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30E001D0-3611-4C11-A3BA-6D06CC71C4AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30E001D0-3611-4C11-A3BA-6D06CC71C4AC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62136D48-A54E-49D6-B669-FF8FE0453772}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62136D48-A54E-49D6-B669-FF8FE0453772}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62136D48-A54E-49D6-B669-FF8FE0453772}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62136D48-A54E-49D6-B669-FF8FE0453772}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{1012E9ED-8A53-4765-B5A8-21AA575D268F} = {86537E9D-A9C7-4D08-BC28-0914B6EB2089}
+		{30E001D0-3611-4C11-A3BA-6D06CC71C4AC} = {86537E9D-A9C7-4D08-BC28-0914B6EB2089}
+		{62136D48-A54E-49D6-B669-FF8FE0453772} = {C718FF17-184C-4282-B8D2-7F989CB58497}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,10 @@
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Debug",
+      "System": "Information",
+      "Microsoft": "Information"
+    }
+  },
+  "ConnectionString": "Host=localhost:5432;Database=husam;Username=postgres;Password="
+}

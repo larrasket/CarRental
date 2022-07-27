@@ -1,0 +1,45 @@
+#+title: Draft
+
+* Main Options;
+** Show Cars;
++ Cars available
++ Cars unavailable
+
+** V Management
+*** Add Car :admin:
+*** Remove a car :admin:
+** Add items to list of sinah doriah :admin:
++ Item
++ Time to renew
++ remove item
++ add-remove item mn el kt3
+** Notifer Change :admin:
++ Car Igar
++ Sinah Notifier
++ Sinah Delay Notifer Frequency
+
+** Adaft Igar,
++ Which car, enter car Id
+  + Normal date entry
+  + Modt el igra
+  + Igar handling
+  + Price
+  + Picture of 3a2d
+** Ta3dil el egar
++ Ta3dil el swara only
++ Canceld
+** Adaft Siana
+*** Siana Doriah
+- Choose el sinah
+  - Entre price
+  - Entre bill pic
+*** Taghieer kt3
+- Choose El kt3
+- s3l el item
+- sort el fatora
+** Idaft Gharamh
+* Features;
+** Notifier
++ Nihait El Igar Notifier, with car data,
++ Sinah Notifier
++ Sinah Delay
