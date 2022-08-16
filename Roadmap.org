@@ -1,45 +1,46 @@
 #+title: Draft
 
 * Main Options;
-** Show Cars;
-+ Cars available
-+ Cars unavailable
-
-** V Management
-*** Add Car :admin:
-*** Remove a car :admin:
-** Add items to list of sinah doriah :admin:
-+ Item
-+ Time to renew
-+ remove item
-+ add-remove item mn el kt3
-** Notifer Change :admin:
-+ Car Igar
-+ Sinah Notifier
-+ Sinah Delay Notifer Frequency
-
-** Adaft Igar,
+** TODO Rents [1/2]
+*** DONE Add Rent
 + Which car, enter car Id
   + Normal date entry
-  + Modt el igra
-  + Igar handling
+  + Rental time
+  + rent handling
   + Price
-  + Picture of 3a2d
-** Ta3dil el egar
-+ Ta3dil el swara only
-+ Canceld
-** Adaft Siana
-*** Siana Doriah
-- Choose el sinah
-  - Entre price
-  - Entre bill pic
-*** Taghieer kt3
-- Choose El kt3
-- s3l el item
-- sort el fatora
-** Idaft Gharamh
+  + Picture of Contract
+*** TODO Remove/Edit Rent
++ Cancel rent
++ Edit contract picture
+** TODO Show Cars [1/3]
+*** TODO Cars available
+*** TODO Cars unavailable
+*** DONE Show All
+** DONE Vehicle Management [2/2] :admin:
+*** DONE Add Car
+*** DONE Remove a car
+** TODO Add items to list of cycle maintenance  [0/3] :admin:
+*** TODO Add Item
+*** TODO Time to renew
+*** TODO Remove Item
+** TODO Notifer Change :admin:
+*** TODO Car Igar
+*** TODO Maintainace Notifier
+*** TODO Maintainace Delay Notifer Frequency
+** TODO Edit Rent
++ Edit contract only
++ Or Cancel
+** Add Maintenance [0/2]
+*** TODO Cycle
+- Choose cycle
+  - Enter price
+  - Enter bill pic
+*** TODO Renew Items
+- Choose Item
+- Enter Price
+- Enter bill
+** TODO Add Fines
 * Features;
 ** Notifier
-+ Nihait El Igar Notifier, with car data,
-+ Sinah Notifier
-+ Sinah Delay
+*** TODO Rent end, with car data,
+*** TODO Maintainace.

@@ -6,7 +6,7 @@ namespace Models.DataModels;
 public class BaseModel
 {
     [Key] public long Id { get; set; }
-    public IdentityUser? CreatedBy { get; set; }
+    public string CreatedBy { get; set; }
     public DateTime CreatedDateTime { get; set; }
 
     public BaseModel()

@@ -22,58 +22,6 @@ namespace Services.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
-
-                    b.Property<int>("AccessFailedCount")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("text");
-
-                    b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("boolean");
-
-                    b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("NormalizedEmail")
-                        .HasColumnType("text");
-
-                    b.Property<string>("NormalizedUserName")
-                        .HasColumnType("text");
-
-                    b.Property<string>("PasswordHash")
-                        .HasColumnType("text");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("text");
-
-                    b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("SecurityStamp")
-                        .HasColumnType("text");
-
-                    b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("UserName")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("IdentityUser");
-                });
-
             modelBuilder.Entity("Models.DataModels.Bill", b =>
                 {
                     b.Property<long>("Id")
@@ -82,7 +30,8 @@ namespace Services.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
-                    b.Property<string>("CreatedById")
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedDateTime")
@@ -98,8 +47,6 @@ namespace Services.Migrations
                         .HasColumnType("numeric");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CreatedById");
 
                     b.HasIndex("MaintenanceId");
 
@@ -117,7 +64,8 @@ namespace Services.Migrations
                     b.Property<long?>("BillId")
                         .HasColumnType("bigint");
 
-                    b.Property<string>("CreatedById")
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedDateTime")
@@ -135,8 +83,6 @@ namespace Services.Migrations
 
                     b.HasIndex("BillId");
 
-                    b.HasIndex("CreatedById");
-
                     b.ToTable("Fines");
                 });
 
@@ -151,7 +97,8 @@ namespace Services.Migrations
                     b.Property<long?>("BillId")
                         .HasColumnType("bigint");
 
-                    b.Property<string>("CreatedById")
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedDateTime")
@@ -163,8 +110,6 @@ namespace Services.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("BillId");
-
-                    b.HasIndex("CreatedById");
 
                     b.ToTable("HGSs");
                 });
@@ -180,7 +125,8 @@ namespace Services.Migrations
                     b.Property<long>("BillId")
                         .HasColumnType("bigint");
 
-                    b.Property<string>("CreatedById")
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedDateTime")
@@ -194,8 +140,6 @@ namespace Services.Migrations
 
                     b.HasIndex("BillId");
 
-                    b.HasIndex("CreatedById");
-
                     b.ToTable("Items");
                 });
 
@@ -207,7 +151,8 @@ namespace Services.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
-                    b.Property<string>("CreatedById")
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedDateTime")
@@ -221,8 +166,6 @@ namespace Services.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CreatedById");
 
                     b.ToTable("Maintenances");
                 });
@@ -238,7 +181,8 @@ namespace Services.Migrations
                     b.Property<long>("ContractId")
                         .HasColumnType("bigint");
 
-                    b.Property<string>("CreatedById")
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedDateTime")
@@ -256,8 +200,6 @@ namespace Services.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ContractId");
-
-                    b.HasIndex("CreatedById");
 
                     b.HasIndex("VehicleId");
 
@@ -280,7 +222,8 @@ namespace Services.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("CreatedById")
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedDateTime")
@@ -296,8 +239,6 @@ namespace Services.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedById");
-
                     b.HasIndex("Number")
                         .IsUnique();
 
@@ -306,15 +247,9 @@ namespace Services.Migrations
 
             modelBuilder.Entity("Models.DataModels.Bill", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
                     b.HasOne("Models.DataModels.Maintenance", null)
                         .WithMany("Bills")
                         .HasForeignKey("MaintenanceId");
-
-                    b.Navigation("CreatedBy");
                 });
 
             modelBuilder.Entity("Models.DataModels.Fine", b =>
@@ -323,13 +258,7 @@ namespace Services.Migrations
                         .WithMany()
                         .HasForeignKey("BillId");
 
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
                     b.Navigation("Bill");
-
-                    b.Navigation("CreatedBy");
                 });
 
             modelBuilder.Entity("Models.DataModels.HGS", b =>
@@ -338,13 +267,7 @@ namespace Services.Migrations
                         .WithMany()
                         .HasForeignKey("BillId");
 
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
                     b.Navigation("Bill");
-
-                    b.Navigation("CreatedBy");
                 });
 
             modelBuilder.Entity("Models.DataModels.Item", b =>
@@ -355,22 +278,7 @@ namespace Services.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
                     b.Navigation("Bill");
-
-                    b.Navigation("CreatedBy");
-                });
-
-            modelBuilder.Entity("Models.DataModels.Maintenance", b =>
-                {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.Navigation("CreatedBy");
                 });
 
             modelBuilder.Entity("Models.DataModels.Rent", b =>
@@ -381,30 +289,15 @@ namespace Services.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
                     b.HasOne("Models.DataModels.Vehicle", "Vehicle")
-                        .WithMany("Rent")
+                        .WithMany("Rents")
                         .HasForeignKey("VehicleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Contract");
 
-                    b.Navigation("CreatedBy");
-
                     b.Navigation("Vehicle");
-                });
-
-            modelBuilder.Entity("Models.DataModels.Vehicle", b =>
-                {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.Navigation("CreatedBy");
                 });
 
             modelBuilder.Entity("Models.DataModels.Maintenance", b =>
@@ -414,7 +307,7 @@ namespace Services.Migrations
 
             modelBuilder.Entity("Models.DataModels.Vehicle", b =>
                 {
-                    b.Navigation("Rent");
+                    b.Navigation("Rents");
                 });
 #pragma warning restore 612, 618
         }

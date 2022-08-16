@@ -6,5 +6,6 @@
       "Microsoft": "Information"
     }
   },
-  "ConnectionString": "Host=localhost:5432;Database=husam;Username=postgres;Password="
+  "ConnectionString": "Host=localhost:5432;Database=husam;Username=postgres;Password=",
+  "TelegramBotKey": "5576522039:AAEnLj4yObQsR6O6i8R-rIxfvR66lIYsUWU"
 }

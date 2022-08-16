@@ -4,5 +4,5 @@ namespace Services;
 
 public class User : IdentityUser
 {
-    public Role Role;
+    public Roles Roles { get; set; }
 }

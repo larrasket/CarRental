@@ -1,35 +1,44 @@
-﻿using Telegram;
-using Telegram.BotAPI;
+﻿using Telegram.BotAPI;
 using Telegram.BotAPI.AvailableMethods;
+using Telegram.BotAPI.AvailableTypes;
 using Telegram.BotAPI.GettingUpdates;
+using Telegram.Languages;
 
-class TelegramClient
+namespace Telegram;
+
+// TODO Contract handler 
+public static class TelegramClient
 {
-    private static void Main()
+    private static async Task Main()
     {
+        AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
         var botToken = "5576522039:AAEnLj4yObQsR6O6i8R-rIxfvR66lIYsUWU";
-        var api = new BotClient(botToken);
+        var botClient = new BotClient(botToken);
+        var exists = Directory.Exists(ExtHelpers.media);
+        var cancel = false;
+        if (!exists)
+            Directory.CreateDirectory(ExtHelpers.media);
 
+        var cancelCommand = new BotCommand("/cancel", "/cancel");
+        botClient.SetMyCommands(cancelCommand);
 
-        var updates = api.GetUpdates();
         while (true)
         {
-            if (updates.Any())
+            try
             {
-                foreach (Update? update in updates)
-                {
-                    Console.WriteLine(update.Message);
-                    api.SendMessage(update.ChatId(), update.Text()); // Send a message
-                }
-
-                var offset = updates.Last().UpdateId + 1;
-                updates = api.GetUpdates(offset);
+                var firstUpdate = await botClient.MessageWatcher(start: true);
+                if (!string.IsNullOrEmpty(firstUpdate.Text()))
+                    await new MessageHandler(botClient, firstUpdate).MainOpen(true);
             }
-            else
+            catch (Exception e)
             {
-                updates = api.GetUpdates();
+                if (e.Message != "stop")
+                {
+                    // Console.WriteLine(Arabic.UnkownError);
+                    throw;
+                    cancel = true;
+                }
             }
         }
     }
-
 }
