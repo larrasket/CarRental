@@ -1,6 +1,27 @@
-namespace Telegram;
+using System.Text;
+using Models.DataModels;
+using Models.Helpers;
+using Services;
+using Telegram.BotAPI;
+using Telegram.BotAPI.AvailableMethods;
+using Telegram.BotAPI.GettingUpdates;
+using Telegram.Languages;
 
-public class CommanderHelpers
+namespace Telegram.Command;
+
+public partial class Commander
 {
-    
+
+
+    private async Task<Update> GenericOptions(Update update, IEnumerable<string> options, string text)
+    {
+        await _client.SendMessageAsync(update.ChatId(), text);
+        var keyboardOptions = await TextGenerator.KeyboradOptions(options);
+        await _client.SendMessageAsync(update.ChatId(), Arabic.ChooseOrAdd, replyMarkup: keyboardOptions);
+        update = await _client.MessageWatcher(update);
+        return update;
+    }
+
+
+
 }
