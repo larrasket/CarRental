@@ -10,19 +10,18 @@ public class MessageHandler
     private readonly BotClient _client;
     private Update? _update;
     private readonly OpenMessages _openMessages;
-    private readonly Commander _commander;
+    private readonly Command.Commander _commander;
 
     public MessageHandler(BotClient client, Update? update)
     {
         _client = client;
         _update = update;
-        _commander = new Commander(_client);
+        _commander = new Command.Commander(_client);
         _openMessages = new OpenMessages(_client);
     }
 
-    public async Task MainOpen(bool start = false)
+    public async Task MainOpen()
     {
-        // if (!start)
         _update = await _openMessages.Usage(_update);
         var f = true;
         while (f)
@@ -36,6 +35,15 @@ public class MessageHandler
                 case "/addrent":
                     await _commander.AddRent(_update);
                     break;
+                    
+                case "/cancelrent":
+                    await _commander.CancelRent(_update);
+                    break;
+                
+                case "/editcontract":
+                    await _commander.EditContract(_update);
+                    break;
+                
                 default:
                     f = true;
                     await _client.SendMessageAsync(_update.ChatId(), Arabic.EntreValidOption);

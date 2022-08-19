@@ -28,7 +28,7 @@ public static class TelegramClient
             {
                 var firstUpdate = await botClient.MessageWatcher(start: true);
                 if (!string.IsNullOrEmpty(firstUpdate.Text()))
-                    await new MessageHandler(botClient, firstUpdate).MainOpen(true);
+                    await new MessageHandler(botClient, firstUpdate).MainOpen();
             }
             catch (Exception e)
             {

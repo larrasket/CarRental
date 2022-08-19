@@ -17,7 +17,9 @@ namespace Telegram.Languages
                                          "/close    - العودة للقائمة الرئيسية\n";
 
         public const string Usage = "قم بالاختيار بين:\n" +
-                                    "/addrent   - إضافة إيجار جديد";
+                                    "/addrent      - إضافة إيجار جديد\n" +
+                                    "/cancelrent   - إلغاء إيجار\n" +
+                                    "/editcontract - تعديل صورة عقد الإيجار\n";
 
         public const string CarNumberAlreadyExist =
             "رقم السيارة مُستخدم بالفعل، من فضلك أدخل رقم جديد أو أدخل /cancel للرجوع للقائمة الرئيسية";
@@ -52,6 +54,9 @@ namespace Telegram.Languages
             public const string EnterPrice = "أدخل السعر";
             public const string SendContractPicture = "أدخل صورة العقد";
             public const string Added = "تم تسجيل الإيجار بنجاح";
+            public const string Cancel = "من فضلك اضغط على رقم العقد المراد إلغاءه";
+            public const string Cancelled = "تم إلغاء العقد بنجاح";
+            public const string Edited = "تم تعديل العقد بنجاح";
         }
     }
 }
