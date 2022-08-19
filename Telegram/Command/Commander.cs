@@ -6,11 +6,10 @@ using Telegram.BotAPI;
 using Telegram.BotAPI.AvailableMethods;
 using Telegram.BotAPI.GettingUpdates;
 using Telegram.Languages;
-using File = Telegram.BotAPI.AvailableTypes.File;
 
 namespace Telegram;
 
-public class Commander
+public partial class Commander
 {
     private readonly BotClient _client;
     private readonly TypeManager<Vehicle> _vehicleManager = new TypeManager<Vehicle>();
@@ -66,7 +65,7 @@ public class Commander
         return update;
     }
 
-    public Task ListVehicles(Update? update, bool admin = false)
+    public Task ListVehicles(Update? update, bool admin = false, bool allowContracts = false)
     {
         var vehicles = _vehicleManager.All();
         var rents = _rentManager.All();
@@ -90,13 +89,13 @@ public class Commander
             message.Append($"{Arabic.CarDetails.Color}: {vehicle.Color}");
             message.Append("\n");
 
-
-            var contract = rents.FirstOrDefault(x => x.Vehicle == vehicle);
-            if (contract == null) continue;
-
-
-            message.Append($"{Arabic.CarDetails.Contract}: /cont{contract.Id}");
-            message.Append("\n");
+            var contracts = rents.Where(x => x.RentEnd < DateOnly.FromDateTime(DateTime.Today));
+            if (!contracts.Any() || !allowContracts) continue;
+            foreach (var contract in contracts)
+            {
+                message.Append($"{Arabic.CarDetails.Contract}: /cont{contract.Id}");
+                message.Append("\n");
+            }
         }
 
         _client.SendMessageAsync(update.ChatId(), message.ToString().PadRight(3));
@@ -109,9 +108,10 @@ public class Commander
         await _vehicleManager.Remove(v.v);
     }
 
-    private async Task<(Vehicle v, Update update)> ChooseVehicle(Update update, bool admin = false)
+    private async Task<(Vehicle v, Update update)> ChooseVehicle(Update update, bool admin = false,
+        bool contracts = false)
     {
-        await ListVehicles(update, admin);
+        await ListVehicles(update, admin, contracts);
         await _client.SendMessageAsync(update.ChatId(), Arabic.CarDetails.EnterNumber);
         update = await _client.MessageWatcher(update);
         var selected = update.Text()[1..];
@@ -196,5 +196,16 @@ public class Commander
         var rs = await _rentManager.Add(rent);
         if (rs <= 0) throw new Exception();
         await _client.SendMessageAsync(update.ChatId(), Arabic.Rent.Added);
+    }
+
+    public async Task CancelRent(Update update)
+    {
+        var (vehicle, u) = await ChooseVehicle(update, contracts: true);
+        update = u;
+        while (!update.Text().Contains("/cont"))
+        {
+            await _client.SendMessageAsync(update.ChatId(), Arabic.Rent.Cancel);
+            update = await _client.MessageWatcher(update);
+        }
     }
 }
