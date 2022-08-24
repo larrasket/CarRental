@@ -1,6 +1,6 @@
 #+title: Draft
 
-* Main Options; [2/8]
+* Main Options; [3/8]
 ** DONE Rents [2/2]
 *** DONE Add Rent
 + Which car, enter car Id
@@ -9,10 +9,11 @@
   + rent handling
   + Price
   + Picture of Contract
+  + Picture of driver licences
 *** DONE Remove/Edit Rent
 + Cancel rent
 + Edit contract picture
-** TODO Show Cars [3/3]
+** DONE Show Cars [3/3]
 *** DONE Not in a current rent
 *** DONE In a current rent (sorted by end date)
 *** DONE All cars
