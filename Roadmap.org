@@ -1,7 +1,7 @@
 #+title: Draft
 
 * Main Options; [2/8]
-** DONE Rents [0/0]
+** DONE Rents [2/2]
 *** DONE Add Rent
 + Which car, enter car Id
   + Normal date entry
@@ -12,7 +12,10 @@
 *** DONE Remove/Edit Rent
 + Cancel rent
 + Edit contract picture
-** TODO Show Cars
+** TODO Show Cars [3/3]
+*** DONE Not in a current rent
+*** DONE In a current rent (sorted by end date)
+*** DONE All cars
 ** DONE Vehicle Management [2/2] :admin:
 *** DONE Add Car
 *** DONE Remove a car

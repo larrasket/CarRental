@@ -19,7 +19,11 @@ namespace Telegram.Languages
         public const string Usage = "قم بالاختيار بين:\n" +
                                     "/addrent      - إضافة إيجار جديد\n" +
                                     "/cancelrent   - إلغاء إيجار\n" +
-                                    "/editcontract - تعديل صورة عقد الإيجار\n";
+                                    "/editrent   - تعديل إيجار\n" +
+                                    "/editcontract - تعديل صورة عقد الإيجار\n" +
+                                    "/showall      - عرض جميع السيارات\n" +
+                                    "/showcarsinrent - عرض السيارات الموجودة في إيجار حاليًا\n" +
+                                    "/showcarsnotinrent - عرض السيارات غير الموجودة في إيجار حاليًا\n";
 
         public const string CarNumberAlreadyExist =
             "رقم السيارة مُستخدم بالفعل، من فضلك أدخل رقم جديد أو أدخل /cancel للرجوع للقائمة الرئيسية";
@@ -35,7 +39,7 @@ namespace Telegram.Languages
             public const string Contract = "العقد";
             public const string Model = "موديل";
             public const string Color = "اللون";
-            public const string EnterNumber = "إضغط على رقم المركبة";
+            public const string EnterNumber = "إضغط على الرقم المراد";
         }
 
         public static class Errors
@@ -45,6 +49,8 @@ namespace Telegram.Languages
 
         public static class Rent
         {
+            public const string StartDay = "تاريخ البداية";
+            public const string EndDay = "تاريخ الإنتهاء";
             public const string EnterDate = "أدخل تاريخ بدء الإيجار أو إضغط /today للتسجيل بتاريخ اليوم";
             public const string EnterValidDate = "رجاء إدخال قيمة عددية صحيحة للتاريخ";
             public const string EnterDays = "أدخل عدد أيام الإيجار";
@@ -57,6 +63,16 @@ namespace Telegram.Languages
             public const string Cancel = "من فضلك اضغط على رقم العقد المراد إلغاءه";
             public const string Cancelled = "تم إلغاء العقد بنجاح";
             public const string Edited = "تم تعديل العقد بنجاح";
+            public const string SendDriver = "أدخل صورة رخصة السائق"; 
+
+            public const string ContractOptions = "هل تريد إضافة صورة للعقد؟:" +
+                                                  "\n" +
+                                                  "/yes نعم \n" +
+                                                  "/no لا \n";
+
+            public const string EditStartOrEnd = "/start لتعديل تاريخ البداية" +
+                                                 "\n" +
+                                                 "/end لتعديل تاريخ الانتهاء";
         }
     }
 }

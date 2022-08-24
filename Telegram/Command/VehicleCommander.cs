@@ -49,42 +49,12 @@ public partial class Commander
     }
 
 
-    public Task ListVehicles(Update? update, bool admin = false, bool allowContracts = false)
+    public async Task ListVehicles(Update? update, bool admin = false, bool allowContracts = false)
     {
-        var vehicles = _vehicleManager.All();
-        var rents = _rentManager.All();
-        var message = new StringBuilder();
-        foreach (var vehicle in vehicles)
-        {
-            if (admin) message.Append($"{Arabic.CarDetails.Number}: /{vehicle.Number}");
-            else message.Append($"{Arabic.CarDetails.Number}: {vehicle.Number}");
-
-            message.Append("\n");
-
-
-            message.Append($"{Arabic.CarDetails.Model}: {vehicle.Model}");
-            message.Append("\n");
-
-
-            message.Append($"{Arabic.CarDetails.Brand}: {vehicle.Brand}");
-            message.Append("\n");
-
-
-            message.Append($"{Arabic.CarDetails.Color}: {vehicle.Color}");
-            message.Append("\n");
-
-            var now = DateOnly.FromDateTime(DateTime.Now);
-            var contracts = rents.Where(x => x.VehicleId == vehicle.Id && x.RentEnd > now);
-            if (!contracts.Any() || !allowContracts) continue;
-            foreach (var contract in contracts)
-            {
-                message.Append($"{Arabic.CarDetails.Contract}: /cont{contract.Id}");
-                message.Append("\n");
-            }
-        }
-
-        _client.SendMessageAsync(update.ChatId(), message.ToString().PadRight(3));
-        return Task.CompletedTask;
+        var vehicles = _vehicleManager.All(x => x.Rents);
+        var rents = _rentManager.All(x => x.Vehicle);
+        var message = await ListBuilder(vehicles, rents, admin, allowContracts);
+        await _client.SendMessageAsync(update.ChatId(), message.PadRight(3));
     }
 
     public async Task RemoveVehicle(Update? update)

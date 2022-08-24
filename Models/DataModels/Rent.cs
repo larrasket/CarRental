@@ -10,18 +10,14 @@ public class Rent : BaseModel
     public Vehicle Vehicle { get; set; }
     public long VehicleId { get; set; }
     public Bill Contract { get; set; }
-    
+    public string Driver { get; set; }
     public long BillId { get; set; }
     public Status Status { get; set; }
-
-    public Rent()
-    {
-        Contract = new Bill();
-        Status = Status.Waiting;
-    }
 }
 
 public enum Status
 {
-    Cancelled, Completed, Waiting
+    Cancelled,
+    Completed,
+    Waiting
 }

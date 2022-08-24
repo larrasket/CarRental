@@ -188,6 +188,10 @@ namespace Services.Migrations
                     b.Property<DateTime>("CreatedDateTime")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("Driver")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<DateOnly>("RentEnd")
                         .HasColumnType("date");
 

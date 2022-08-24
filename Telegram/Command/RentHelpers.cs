@@ -37,7 +37,13 @@ public partial class Commander
         }
 
         rent.RentStart = DateOnly.FromDateTime(startDate);
-        if (vehicle.Rents == null || rent.ValidStartDay()) return (rent, update);
+        rent.Vehicle = vehicle;
+        if (rent.ValidStartDay())
+        {
+            rent.Vehicle = null;
+            return (rent, update);
+        }
+
         await _client.SendMessageAsync(update.ChatId(), Arabic.Rent.NotValidStartDay);
         throw new Exception("stop");
     }
@@ -76,6 +82,18 @@ public partial class Commander
 
     private async Task<(Rent rent, Update update)> ReadRentContract(Update update, Rent rent)
     {
+        await _client.SendMessageAsync(update.ChatId(), Arabic.Rent.ContractOptions);
+        update = await _client.MessageWatcher(update);
+        while (update.Text() != "/yes" && update.Text() != "/no")
+        {
+            await _client.SendMessageAsync(update.ChatId(), Arabic.EntreValidOption);
+            update = await _client.MessageWatcher(update);
+        }
+
+        if (update.Text() == "/no")
+            return (rent, update);
+
+
         await _client.SendMessageAsync(update.ChatId(), Arabic.Rent.SendContractPicture);
         update = await _client.MessageWatcher(update);
         var pic = (update.Message.Photo ?? throw new InvalidOperationException()).Last();
@@ -83,10 +101,25 @@ public partial class Commander
         var filename = Guid.NewGuid().ToString()[..7] + ".jpeg";
         await File.WriteAllBytesAsync(Path.Combine(ExtHelpers.media, filename), i);
 
+        // TODO bad perform
         var cntrct = await _contractManager.Find(rent.BillId);
 
         cntrct.Image = filename;
-        await _contractManager.Edit(cntrct);
+        int j = await _contractManager.Save();
+        // await _contractManager.Edit(cntrct);
+        return (rent, update);
+    }
+
+
+    private async Task<(Rent rent, Update update)> ReadRentDriver(Update update, Rent rent)
+    {
+        await _client.SendMessageAsync(update.ChatId(), Arabic.Rent.SendDriver);
+        update = await _client.MessageWatcher(update);
+        var pic = (update.Message.Photo ?? throw new InvalidOperationException()).Last();
+        var i = await _client.GetFileByteArrayAsync((await _client.GetFileAsync(pic.FileId)).FilePath);
+        var filename = Guid.NewGuid().ToString()[..7] + ".jpeg";
+        await File.WriteAllBytesAsync(Path.Combine(ExtHelpers.media, filename), i);
+        rent.Driver = filename;
         return (rent, update);
     }
 }

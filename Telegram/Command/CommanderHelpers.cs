@@ -11,8 +11,6 @@ namespace Telegram.Command;
 
 public partial class Commander
 {
-
-
     private async Task<Update> GenericOptions(Update update, IEnumerable<string> options, string text)
     {
         await _client.SendMessageAsync(update.ChatId(), text);
@@ -21,7 +19,4 @@ public partial class Commander
         update = await _client.MessageWatcher(update);
         return update;
     }
-
-
-
 }

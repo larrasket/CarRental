@@ -6,9 +6,12 @@ public static class RentHelper
 {
     public static double Days(this Rent r) => r.RentEnd.DayNumber - r.RentStart.DayNumber;
 
-    public static bool ValidStartDay(this Rent rent) =>
-        !rent.Vehicle.Rents.Where(x => x.RentEnd > rent.RentStart || x.RentStart > rent.RentStart)
-            .Any(f => rent.RentStart >= f.RentStart && (rent.RentEnd != default && rent.RentEnd <= f.RentEnd));
+    public static bool ValidStartDay(this Rent rent)
+    {
+        return !rent.Vehicle.Rents.Where(x => x.RentEnd > rent.RentStart || x.RentStart > rent.RentStart)
+            // .Any(f => rent.RentStart >= f.RentStart && (rent.RentEnd != default && rent.RentEnd <= f.RentEnd));
+            .Any(r => rent.RentStart >= r.RentStart && rent.RentStart <= r.RentEnd);
+    }
 
     public static bool ValidEndDay(this Rent rent)
     {

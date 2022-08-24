@@ -1,3 +1,4 @@
+using Models.DataModels;
 using Telegram.BotAPI;
 using Telegram.BotAPI.AvailableMethods;
 using Telegram.BotAPI.GettingUpdates;
@@ -35,15 +36,32 @@ public class MessageHandler
                 case "/addrent":
                     await _commander.AddRent(_update);
                     break;
-                    
+
+
+                case "/editrent":
+                    await _commander.EditRent(_update);
+                    break;
+
                 case "/cancelrent":
                     await _commander.CancelRent(_update);
                     break;
-                
+
                 case "/editcontract":
                     await _commander.EditContract(_update);
                     break;
-                
+
+                case "/showcarsnotinrent":
+                    await _commander.ShowCars(Status.Completed, _update);
+                    break;
+
+                case "/showcarsinrent":
+                    await _commander.ShowCars(Status.Waiting, _update);
+                    break;
+
+                case "/showall":
+                    await _commander.ShowCars(Status.Cancelled, _update);
+                    break;
+
                 default:
                     f = true;
                     await _client.SendMessageAsync(_update.ChatId(), Arabic.EntreValidOption);
@@ -82,7 +100,6 @@ public class MessageHandler
             }
         }
 
-// TODO Call Main 
         _update = await _client.MessageWatcher();
         await MainOpen();
     }
