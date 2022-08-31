@@ -29,9 +29,19 @@
 - Enter bill
 ** TODO Add Fines
 ** TODO Notifer Change [0/3] :admin:
-*** TODO Car Igar
+*** TODO Car Rent
 *** TODO Maintainace Notifier
 *** TODO Maintainace Delay Notifer Frequency
 ** TODO Notifier [0/2]
 *** TODO Rent end, with car data,
 *** TODO Maintainace.
+* Fixes [6/6]
+** DONE Showing Cars
+** DONE Date Inputting
+** DONE Add Details Car In Rent
+** DONE Edit Contact
+Can not choose /cont
+** DONE Show Cars Not In Rent
+** DONE Rent OVERLAP
+* Note
+** TODO When you deploy, make sure to save IO output from the CLI (since logging)

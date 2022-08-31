@@ -49,11 +49,15 @@ public partial class Commander
     }
 
 
-    public async Task ListVehicles(Update? update, bool admin = false, bool allowContracts = false)
+    public async Task ListVehicles(Update? update, bool admin = false, bool allowContracts = false,
+        bool allowRents = false)
     {
-        var vehicles = _vehicleManager.All(x => x.Rents);
-        var rents = _rentManager.All(x => x.Vehicle);
-        var message = await ListBuilder(vehicles, rents, admin, allowContracts);
+        var tday = DateOnly.FromDateTime(DateTime.Today);
+        var vehicles = allowRents
+            ? _vehicleManager.Where(x => x.Rents.Any(r => r.Status != Status.Cancelled && r.RentEnd >= tday),
+                x => x.Rents)
+            : _vehicleManager.All(x => x.Rents);
+        var message = await ListBuilder(vehicles, admin, allowContracts, allowRents);
         await _client.SendMessageAsync(update.ChatId(), message.PadRight(3));
     }
 

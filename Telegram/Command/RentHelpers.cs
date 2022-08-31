@@ -10,9 +10,9 @@ public partial class Commander
 {
     private async Task<Update> ChooseRent(Update update)
     {
-        var (vehicle, u) = await ChooseVehicle(update, contracts: true);
+        var (vehicle, u) = await ChooseVehicle(update, rents: true);
         update = u;
-        while (!update.Text().Contains("/cont"))
+        while (!update.Text().Contains("/cont") && !update.Text().Contains("/rent"))
         {
             await _client.SendMessageAsync(update.ChatId(), Arabic.Rent.Cancel);
             update = await _client.MessageWatcher(update);
@@ -21,13 +21,15 @@ public partial class Commander
         return update;
     }
 
-    private async Task<(Rent rent, Update update)> ReadRentStartDate(Update update, Rent rent, Vehicle vehicle)
+
+    private async Task<(Update update, DateOnly)> ReadStartDate(Update update)
     {
         await _client.SendMessageAsync(update.ChatId(), Arabic.Rent.EnterDate);
         update = await _client.MessageWatcher(update);
-
         var startDate = DateTime.Today;
-        while (update.Text() != "/today" && !DateTime.TryParse(update.Text(), out startDate))
+        while (update.Text() != "/today" && !DateTime.TryParseExact(update.Text(), "yyyy-MM-dd",
+                   System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None,
+                   out startDate))
         {
             await _client.SendMessageAsync(update.ChatId(), Arabic.Rent.EnterValidDate);
             update = await _client.MessageWatcher(update);
@@ -36,7 +38,12 @@ public partial class Commander
             break;
         }
 
-        rent.RentStart = DateOnly.FromDateTime(startDate);
+        return (update, DateOnly.FromDateTime(startDate));
+    }
+
+    private async Task<(Rent rent, Update update)> AddStartDate(Update update, Rent rent, Vehicle vehicle)
+    {
+        (update, rent.RentStart) = await ReadStartDate(update);
         rent.Vehicle = vehicle;
         if (rent.ValidStartDay())
         {
@@ -48,7 +55,8 @@ public partial class Commander
         throw new Exception("stop");
     }
 
-    private async Task<(Rent rent, Update update)> ReadRentEndDate(Update update, Rent rent, Vehicle vehicle)
+
+    private async Task<(Update update, int)> ReadEndDate(Update update)
     {
         await _client.SendMessageAsync(update.ChatId(), Arabic.Rent.EnterDays);
         update = await _client.MessageWatcher(update);
@@ -59,8 +67,21 @@ public partial class Commander
             update = await _client.MessageWatcher(update);
         }
 
+        return (update, n);
+    }
+
+    private async Task<(Rent rent, Update update)> AddEndDate(Update update, Rent rent, Vehicle vehicle)
+    {
+        var n = -1;
+        (update, n) = await ReadEndDate(update);
         rent.RentEnd = rent.RentStart.AddDays(n);
-        if (vehicle.Rents == null || rent.ValidEndDay()) return (rent, update);
+        rent.Vehicle = vehicle;
+        if (rent.ValidEndDay())
+        {
+            rent.Vehicle = null;
+            return (rent, update);
+        }
+
         await _client.SendMessageAsync(update.ChatId(), Arabic.Rent.NotValidStartDay);
         throw new Exception("stop");
     }
@@ -80,18 +101,21 @@ public partial class Commander
         return (rent, update);
     }
 
-    private async Task<(Rent rent, Update update)> ReadRentContract(Update update, Rent rent)
+    private async Task<(Rent rent, Update update)> ReadRentContract(Update update, Rent rent, bool read = false)
     {
-        await _client.SendMessageAsync(update.ChatId(), Arabic.Rent.ContractOptions);
-        update = await _client.MessageWatcher(update);
-        while (update.Text() != "/yes" && update.Text() != "/no")
+        if (!read)
         {
-            await _client.SendMessageAsync(update.ChatId(), Arabic.EntreValidOption);
+            await _client.SendMessageAsync(update.ChatId(), Arabic.Rent.ContractOptions);
             update = await _client.MessageWatcher(update);
-        }
+            while (update.Text() != "/yes" && update.Text() != "/no")
+            {
+                await _client.SendMessageAsync(update.ChatId(), Arabic.EntreValidOption);
+                update = await _client.MessageWatcher(update);
+            }
 
-        if (update.Text() == "/no")
-            return (rent, update);
+            if (update.Text() == "/no")
+                return (rent, update);
+        }
 
 
         await _client.SendMessageAsync(update.ChatId(), Arabic.Rent.SendContractPicture);
@@ -101,12 +125,15 @@ public partial class Commander
         var filename = Guid.NewGuid().ToString()[..7] + ".jpeg";
         await File.WriteAllBytesAsync(Path.Combine(ExtHelpers.media, filename), i);
 
-        // TODO bad perform
-        var cntrct = await _contractManager.Find(rent.BillId);
-
-        cntrct.Image = filename;
-        int j = await _contractManager.Save();
-        // await _contractManager.Edit(cntrct);
+        // // TODO bad perform
+        // var cntrct = await _contractManager.Find(rent.BillId);
+        // if(cntrct == null)  cntrct = new Bill()
+        // {
+        //     
+        // }
+        // int j = await _contractManager.Save();
+        // // await _contractManager.Edit(cntrct);
+        rent.Contract.Image = filename;
         return (rent, update);
     }
 

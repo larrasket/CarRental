@@ -37,7 +37,6 @@ public class MessageHandler
                     await _commander.AddRent(_update);
                     break;
 
-
                 case "/editrent":
                     await _commander.EditRent(_update);
                     break;

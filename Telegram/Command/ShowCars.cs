@@ -28,10 +28,10 @@ public partial class Commander
     private async Task ShowCarsInCurrentRent(bool current, Update update)
     {
         var vehicles = current
-            ? _vehicleManager.Where(x => x.Rents.Any(f => !f.ValidStartDay()), x => x.Rents)
-            : _vehicleManager.Where(x => x.Rents.Any(f => f.ValidStartDay()), x => x.Rents);
+            ? _vehicleManager.Where(x => x.InRent(), x => x.Rents)
+            : _vehicleManager.Where(x => !x.InRent(), x => x.Rents);
 
-        var message = await ListBuilder(vehicles, null, false, false);
+        var message = await ListBuilder(vehicles, false, false, current);
         if (!string.IsNullOrEmpty(message))
             await _client.SendMessageAsync(update.ChatId(), message);
     }

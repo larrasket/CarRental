@@ -20,24 +20,26 @@ public static class TelegramClient
     private static async Task Main()
     {
         Init();
-        var botToken = LocalReader.GetObj("PTelegramBotKey");
+        var botToken = LocalReader.GetObj("TelegramBotKey");
         var botClient = new BotClient(botToken);
         var cancelCommand = new BotCommand("/cancel", "/cancel");
         botClient.SetMyCommands(cancelCommand);
-
+        Update f = new Update();
         while (true)
         {
             try
             {
                 var firstUpdate = await botClient.MessageWatcher(start: true);
+                f = firstUpdate;
                 if (!string.IsNullOrEmpty(firstUpdate.Text()))
                     await new MessageHandler(botClient, firstUpdate).MainOpen();
             }
             catch (Exception e)
             {
                 if (e.Message == "stop") continue;
-                Console.WriteLine(Arabic.UnkownError);
-                throw;
+                Console.WriteLine(e);
+                await botClient.SendMessageAsync(f.ChatId(), Arabic.UnkownError);
+                
             }
         }
     }

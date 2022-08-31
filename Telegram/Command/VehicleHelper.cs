@@ -9,15 +9,15 @@ namespace Telegram.Command;
 public partial class Commander
 {
     private async Task<(Vehicle v, Update update)> ChooseVehicle(Update update, bool admin = false,
-        bool contracts = false)
+        bool contracts = false, bool rents = false)
     {
-        await ListVehicles(update, admin, contracts);
+        await ListVehicles(update, admin, contracts, rents);
         await _client.SendMessageAsync(update.ChatId(), Arabic.CarDetails.EnterNumber);
         update = await _client.MessageWatcher(update);
 
         var selected = update.Text()[1..];
         var v = await _vehicleManager.First(x => x.Number == selected, x => x.Rents);
-        if (contracts) return (v, update)!;
+        if (contracts || rents) return (v, update)!;
         {
             while (v is null)
             {
@@ -29,59 +29,42 @@ public partial class Commander
         return (v, update);
     }
 
-    private static Task<string> ListBuilder(IEnumerable<Vehicle> vehicles, IEnumerable<Rent> rents, bool admin,
-        bool allowContracts)
+    private static Task<string> ListBuilder(IEnumerable<Vehicle> vehicles, bool admin,
+        bool allowContracts, bool allowRents)
     {
         StringBuilder message = new();
+        foreach (var vehicle in vehicles)
+        {
+            if (admin) message.Append($"{Arabic.CarDetails.Number}: /{vehicle.Number}");
+            else message.Append($"{Arabic.CarDetails.Number}: {vehicle.Number}");
 
-        if (allowContracts == false)
-            foreach (var vehicle in vehicles)
+            message.Append("\n");
+            message.Append($"{Arabic.CarDetails.Model}: {vehicle.Model}");
+            message.Append("\n");
+            message.Append($"{Arabic.CarDetails.Brand}: {vehicle.Brand}");
+            message.Append("\n");
+            message.Append($"{Arabic.CarDetails.Color}: {vehicle.Color}");
+            message.Append("\n");
+            message.Append("\n");
+            if (!allowContracts && !allowRents) continue;
+            var n = DateOnly.FromDateTime(DateTime.Today);
+            var current =
+                vehicle.Rents.Where(x => x.Status != Status.Cancelled && x.RentStart >= n || x.RentEnd >= n);
+            foreach (var rent in current)
             {
-                if (admin) message.Append($"{Arabic.CarDetails.Number}: /{vehicle.Number}");
-                else message.Append($"{Arabic.CarDetails.Number}: {vehicle.Number}");
-
+                message.Append($"{Arabic.Rent.StartDay}: {rent.RentStart.Date()}");
                 message.Append("\n");
-
-
-                message.Append($"{Arabic.CarDetails.Model}: {vehicle.Model}");
+                message.Append($"{Arabic.Rent.EndDay}: {rent.RentEnd.Date()}");
                 message.Append("\n");
-
-
-                message.Append($"{Arabic.CarDetails.Brand}: {vehicle.Brand}");
-                message.Append("\n");
-
-
-                message.Append($"{Arabic.CarDetails.Color}: {vehicle.Color}");
-                message.Append("\n");
-                message.Append("\n");
-            }
-        else
-            foreach (var rent in rents)
-            {
-                message.Append($"{Arabic.CarDetails.Number}: {rent.Vehicle.Number}");
-
-                message.Append("\n");
-
-
-                message.Append($"{Arabic.CarDetails.Model}: {rent.Vehicle.Model}");
-                message.Append("\n");
-
-
-                message.Append($"{Arabic.CarDetails.Brand}: {rent.Vehicle.Brand}");
-                message.Append("\n");
-
-
-                message.Append($"{Arabic.CarDetails.Color}: {rent.Vehicle.Color}");
-                message.Append("\n");
-
-                message.Append($"{Arabic.Rent.StartDay}: {rent.RentStart}");
-                message.Append("\n");
-
-                message.Append($"{Arabic.Rent.EndDay}: {rent.RentEnd}");
-                message.Append("\n");
+                if (allowContracts)
+                    message.Append($"{Arabic.CarDetails.Contract}: /cont{rent.BillId}");
+                else
+                    message.Append($"{Arabic.CarDetails.Rent}: /rent{rent.Id}");
                 message.Append("\n");
             }
 
+            message.Append("\n");
+        }
 
         return Task.FromResult(message.ToString());
     }
