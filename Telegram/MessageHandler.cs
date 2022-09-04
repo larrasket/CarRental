@@ -61,6 +61,18 @@ public class MessageHandler
                     await _commander.ShowCars(Status.Cancelled, _update);
                     break;
 
+                case "/fine":
+                    await _commander.AddFine(_update);
+                    break;
+
+                case "/hgs":
+                    await _commander.AddHGS(_update);
+                    break;
+
+                case "/mntnc":
+                    await _commander.Maintenance(_update);
+                    break;
+
                 default:
                     f = true;
                     await _client.SendMessageAsync(_update.ChatId(), Arabic.EntreValidOption);

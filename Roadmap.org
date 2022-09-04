@@ -1,6 +1,6 @@
 #+title: Draft
 
-* Main Options; [3/8]
+* Main Options; [6/9]
 ** DONE Rents [2/2]
 *** DONE Add Rent
 + Which car, enter car Id
@@ -20,21 +20,22 @@
 ** DONE Vehicle Management [2/2] :admin:
 *** DONE Add Car
 *** DONE Remove a car
-** TODO Add items to list of cycle maintenance  [0/3] :admin:
-*** TODO Add Item
-*** TODO Time to renew
-** TODO Add Maintenance [0/2]
+** DONE Add Fines
+** DONE HGS
+** DONE Add Maintenance [0/0]
 - Choose Item
 - Enter Price
 - Enter bill
-** TODO Add Fines
+** TODO Notifier [0/2] :jobs:
+*** TODO Rent end, with car data,
+*** TODO Maintainace.
 ** TODO Notifer Change [0/3] :admin:
 *** TODO Car Rent
 *** TODO Maintainace Notifier
 *** TODO Maintainace Delay Notifer Frequency
-** TODO Notifier [0/2]
-*** TODO Rent end, with car data,
-*** TODO Maintainace.
+** TODO Add items to list of cycle maintenance  [0/2] :admin:jobs:
+*** TODO Add Item
+*** TODO Time to renew
 * Fixes [6/6]
 ** DONE Showing Cars
 ** DONE Date Inputting

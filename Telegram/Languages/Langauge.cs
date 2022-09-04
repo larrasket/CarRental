@@ -23,7 +23,10 @@ namespace Telegram.Languages
                                     "/editcontract - تعديل صورة عقد الإيجار\n" +
                                     "/showall      - عرض جميع السيارات\n" +
                                     "/showcarsinrent - عرض السيارات الموجودة في إيجار حاليًا\n" +
-                                    "/showcarsnotinrent - عرض السيارات غير الموجودة في إيجار حاليًا\n";
+                                    "/showcarsnotinrent - عرض السيارات غير الموجودة في إيجار حاليًا\n" +
+                                    "/hgs - إضافة اتش جي اس" +
+                                    "/fine - إضافة فاتورة" +
+                                    "/mntnc - إضافة فاتورة صيانة";
 
         public const string CarNumberAlreadyExist =
             "رقم السيارة مُستخدم بالفعل، من فضلك أدخل رقم جديد أو أدخل /cancel للرجوع للقائمة الرئيسية";
@@ -40,7 +43,6 @@ namespace Telegram.Languages
             public const string Model = "موديل";
             public const string Color = "اللون";
             public const string Rent = "الإيجار";
-            public const string EnterNumber = "إضغط على الرقم المراد";
         }
 
         public static class Errors
@@ -53,12 +55,8 @@ namespace Telegram.Languages
             public const string StartDay = "تاريخ البداية";
             public const string EndDay = "تاريخ الإنتهاء";
             public const string EnterDate = "أدخل تاريخ بدء الإيجار أو إضغط /today للتسجيل بتاريخ اليوم";
-            public const string EnterValidDate = "رجاء إدخال قيمة عددية صحيحة للتاريخ";
             public const string EnterDays = "أدخل عدد أيام الإيجار";
-            public const string EnterValidNumber = "أدخل قيمة عديدة صحيحة";
-            public const string EnterValidPrice = "أدخل قيمة عددية صحيحة للسعر";
             public const string NotValidStartDay = "هذه المركبة محجوزة في هذا التاريخ";
-            public const string EnterPrice = "أدخل السعر";
             public const string SendContractPicture = "أدخل صورة العقد";
             public const string Added = "تم تسجيل الإيجار بنجاح";
             public const string Cancel = "من فضلك اضغط على رقم العقد";
@@ -75,5 +73,16 @@ namespace Telegram.Languages
                                                  "\n" +
                                                  "/end لتعديل تاريخ الانتهاء";
         }
+
+        public static class Fines
+        {
+        }
+
+        public const string EnterValidDate = "رجاء إدخال قيمة عددية صحيحة للتاريخ";
+        public const string EnterValidNumber = "أدخل قيمة عديدة صحيحة";
+        public const string EnterValidPrice = "أدخل قيمة عددية صحيحة للسعر";
+        public const string EnterPrice = "أدخل السعر";
+        public const string EnterNumber = "إضغط على الرقم المراد";
+        public const string EnterPicture = "أرسل الصورة";
     }
 }

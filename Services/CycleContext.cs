@@ -20,7 +20,6 @@ public class CycleContext : DbContext
     public DbSet<Rent> Rents { get; set; }
     public DbSet<Maintenance> Maintenances { get; set; }
     public DbSet<Item> Items { get; set; }
-    public DbSet<HGS> HGSs { get; set; }
 
     public DbSet<Fine> Fines { get; set; }
 

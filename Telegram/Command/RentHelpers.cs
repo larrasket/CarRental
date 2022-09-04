@@ -27,11 +27,12 @@ public partial class Commander
         await _client.SendMessageAsync(update.ChatId(), Arabic.Rent.EnterDate);
         update = await _client.MessageWatcher(update);
         var startDate = DateTime.Today;
+        //todo without year, and start with day
         while (update.Text() != "/today" && !DateTime.TryParseExact(update.Text(), "yyyy-MM-dd",
                    System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None,
                    out startDate))
         {
-            await _client.SendMessageAsync(update.ChatId(), Arabic.Rent.EnterValidDate);
+            await _client.SendMessageAsync(update.ChatId(), Arabic.EnterValidDate);
             update = await _client.MessageWatcher(update);
             if (update.Text() != "/today") continue;
             startDate = DateTime.Today;
@@ -63,7 +64,7 @@ public partial class Commander
         var n = 0;
         while (!int.TryParse(update.Text(), out n))
         {
-            await _client.SendMessageAsync(update.ChatId(), Arabic.Rent.EnterValidPrice);
+            await _client.SendMessageAsync(update.ChatId(), Arabic.EnterValidPrice);
             update = await _client.MessageWatcher(update);
         }
 
@@ -86,18 +87,23 @@ public partial class Commander
         throw new Exception("stop");
     }
 
-    private async Task<(Rent rent, Update update)> ReadRentPrice(Update update, Rent rent)
+    private async Task<(Update update, decimal m)> ReadPrice(Update update)
     {
-        await _client.SendMessageAsync(update.ChatId(), Arabic.Rent.EnterPrice);
         update = await _client.MessageWatcher(update);
-        decimal m = 0;
+        decimal m;
         while (!decimal.TryParse(update.Text(), out m))
         {
-            await _client.SendMessageAsync(update.ChatId(), Arabic.Rent.EnterValidNumber);
+            await _client.SendMessageAsync(update.ChatId(), Arabic.EnterValidNumber);
             update = await _client.MessageWatcher(update);
         }
 
-        rent.Contract.Price = m;
+        return (update, m);
+    }
+
+    private async Task<(Rent rent, Update update)> ReadRentPrice(Update update, Rent rent)
+    {
+        await _client.SendMessageAsync(update.ChatId(), Arabic.EnterPrice);
+        (update, rent.Contract.Price) = await ReadPrice(update);
         return (rent, update);
     }
 
@@ -117,24 +123,19 @@ public partial class Commander
                 return (rent, update);
         }
 
+        (update, rent.Contract.Image) = await ReadPicture(update);
+    return (rent, update);
+    }
 
-        await _client.SendMessageAsync(update.ChatId(), Arabic.Rent.SendContractPicture);
+    private async Task<(Update, string)> ReadPicture(Update update)
+    {
+        await _client.SendMessageAsync(update.ChatId(), Arabic.EnterPicture);
         update = await _client.MessageWatcher(update);
         var pic = (update.Message.Photo ?? throw new InvalidOperationException()).Last();
         var i = await _client.GetFileByteArrayAsync((await _client.GetFileAsync(pic.FileId)).FilePath);
         var filename = Guid.NewGuid().ToString()[..7] + ".jpeg";
         await File.WriteAllBytesAsync(Path.Combine(ExtHelpers.media, filename), i);
-
-        // // TODO bad perform
-        // var cntrct = await _contractManager.Find(rent.BillId);
-        // if(cntrct == null)  cntrct = new Bill()
-        // {
-        //     
-        // }
-        // int j = await _contractManager.Save();
-        // // await _contractManager.Edit(cntrct);
-        rent.Contract.Image = filename;
-        return (rent, update);
+        return (update, filename);
     }
 
 

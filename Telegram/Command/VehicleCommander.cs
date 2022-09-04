@@ -1,10 +1,7 @@
 namespace Telegram.Command;
 
-using System.Text;
 using Models.DataModels;
-using Models.Helpers;
 using Services;
-using Telegram.BotAPI;
 using Telegram.BotAPI.AvailableMethods;
 using Telegram.BotAPI.GettingUpdates;
 using Telegram.Languages;
@@ -63,7 +60,7 @@ public partial class Commander
 
     public async Task RemoveVehicle(Update? update)
     {
-        var v = await ChooseVehicle(update, true);
+        var v = await ChooseVehicle(update!, true);
         await _vehicleManager.Remove(v.v);
     }
 }

@@ -9,7 +9,6 @@ namespace Telegram.Command;
 public partial class Commander
 {
     private readonly TypeManager<Rent> _rentManager = new();
-    private readonly TypeManager<Bill> _contractManager = new();
 
     public async Task AddRent(Update update)
     {
@@ -17,7 +16,7 @@ public partial class Commander
         var rent = new Rent
         {
             VehicleId = vehicle.Id,
-            Contract = new Bill()
+            Contract = new Bill(),
         };
         update = update1;
 
@@ -26,10 +25,10 @@ public partial class Commander
         (rent, update) = await ReadRentPrice(update, rent);
         (rent, update) = await ReadRentContract(update, rent);
         (rent, update) = await ReadRentDriver(update, rent);
-
         rent.CreatedBy = update.UserName();
         rent.Contract.CreatedBy = rent.CreatedBy;
         rent.Status = Status.Waiting;
+        rent.Contract.Type = TypeOfBill.Rent;
         var rs = await _rentManager.Add(rent);
         if (rs <= 0) throw new Exception();
         await _client.SendMessageAsync(update.ChatId(), Arabic.Rent.Added);

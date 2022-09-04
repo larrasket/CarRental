@@ -12,7 +12,7 @@ public partial class Commander
         bool contracts = false, bool rents = false)
     {
         await ListVehicles(update, admin, contracts, rents);
-        await _client.SendMessageAsync(update.ChatId(), Arabic.CarDetails.EnterNumber);
+        await _client.SendMessageAsync(update.ChatId(), Arabic.EnterNumber);
         update = await _client.MessageWatcher(update);
 
         var selected = update.Text()[1..];
