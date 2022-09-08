@@ -22,5 +22,6 @@ public enum TypeOfBill
     Rent,
     Fine,
     HGS,
-    Maintenance
+    RegularMaintenance,
+    CycleMaintenance,
 }

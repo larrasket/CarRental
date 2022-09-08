@@ -24,9 +24,10 @@ namespace Telegram.Languages
                                     "/showall      - عرض جميع السيارات\n" +
                                     "/showcarsinrent - عرض السيارات الموجودة في إيجار حاليًا\n" +
                                     "/showcarsnotinrent - عرض السيارات غير الموجودة في إيجار حاليًا\n" +
-                                    "/hgs - إضافة اتش جي اس" +
-                                    "/fine - إضافة فاتورة" +
-                                    "/mntnc - إضافة فاتورة صيانة";
+                                    "/hgs - إضافة اتش جي اس\n" +
+                                    "/fine - إضافة فاتورة\n" +
+                                    "/mntnc - إضافة فاتورة صيانة\n" +
+                                    "/cmntnc - إضافة فاتورة صيانة دورية\n";
 
         public const string CarNumberAlreadyExist =
             "رقم السيارة مُستخدم بالفعل، من فضلك أدخل رقم جديد أو أدخل /cancel للرجوع للقائمة الرئيسية";

@@ -1,6 +1,6 @@
 namespace Models.DataModels;
 
-public class Maintenance : BaseModel
+public class CycleMaintenance : BaseModel
 {
     public string Name { get; set; }
     // if null, then it is not cycle

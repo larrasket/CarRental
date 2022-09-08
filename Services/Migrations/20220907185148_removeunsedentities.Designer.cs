@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Services;
@@ -11,9 +12,10 @@ using Services;
 namespace Services.Migrations
 {
     [DbContext(typeof(CycleContext))]
-    partial class CycleContextModelSnapshot : ModelSnapshot
+    [Migration("20220907185148_removeunsedentities")]
+    partial class removeunsedentities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,6 +39,9 @@ namespace Services.Migrations
                     b.Property<DateTime>("CreatedDateTime")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<long?>("CycleMaintenanceId")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("Image")
                         .HasColumnType("text");
 
@@ -48,7 +53,98 @@ namespace Services.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CycleMaintenanceId");
+
                     b.ToTable("Bills");
+                });
+
+            modelBuilder.Entity("Models.DataModels.CycleMaintenance", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedDateTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int?>("DaysToRenew")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Maintenances");
+                });
+
+            modelBuilder.Entity("Models.DataModels.Fine", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<long?>("BillId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedDateTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Types")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BillId");
+
+                    b.ToTable("Fines");
+                });
+
+            modelBuilder.Entity("Models.DataModels.Item", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<long>("BillId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedDateTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BillId");
+
+                    b.ToTable("Items");
                 });
 
             modelBuilder.Entity("Models.DataModels.Rent", b =>
@@ -133,6 +229,33 @@ namespace Services.Migrations
                     b.ToTable("Vehicles");
                 });
 
+            modelBuilder.Entity("Models.DataModels.Bill", b =>
+                {
+                    b.HasOne("Models.DataModels.CycleMaintenance", null)
+                        .WithMany("Bills")
+                        .HasForeignKey("CycleMaintenanceId");
+                });
+
+            modelBuilder.Entity("Models.DataModels.Fine", b =>
+                {
+                    b.HasOne("Models.DataModels.Bill", "Bill")
+                        .WithMany()
+                        .HasForeignKey("BillId");
+
+                    b.Navigation("Bill");
+                });
+
+            modelBuilder.Entity("Models.DataModels.Item", b =>
+                {
+                    b.HasOne("Models.DataModels.Bill", "Bill")
+                        .WithMany()
+                        .HasForeignKey("BillId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Bill");
+                });
+
             modelBuilder.Entity("Models.DataModels.Rent", b =>
                 {
                     b.HasOne("Models.DataModels.Bill", "Contract")
@@ -150,6 +273,11 @@ namespace Services.Migrations
                     b.Navigation("Contract");
 
                     b.Navigation("Vehicle");
+                });
+
+            modelBuilder.Entity("Models.DataModels.CycleMaintenance", b =>
+                {
+                    b.Navigation("Bills");
                 });
 
             modelBuilder.Entity("Models.DataModels.Vehicle", b =>

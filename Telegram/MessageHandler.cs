@@ -62,17 +62,17 @@ public class MessageHandler
                     break;
 
                 case "/fine":
-                    await _commander.AddFine(_update);
+                    await _commander.Fine(_update);
                     break;
-
                 case "/hgs":
-                    await _commander.AddHGS(_update);
+                    await _commander.HGS(_update);
                     break;
-
                 case "/mntnc":
-                    await _commander.Maintenance(_update);
+                    await _commander.RegularMaintenance(_update);
                     break;
-
+                case "/cmntnc":
+                    await _commander.CycleMaintenance(_update);
+                    break;
                 default:
                     f = true;
                     await _client.SendMessageAsync(_update.ChatId(), Arabic.EntreValidOption);

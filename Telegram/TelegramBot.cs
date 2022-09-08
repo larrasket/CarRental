@@ -23,8 +23,8 @@ public static class TelegramClient
         var botToken = LocalReader.GetObj("TelegramBotKey");
         var botClient = new BotClient(botToken);
         var cancelCommand = new BotCommand("/cancel", "/cancel");
+        var f = new Update();
         botClient.SetMyCommands(cancelCommand);
-        Update f = new Update();
         while (true)
         {
             try
@@ -39,7 +39,6 @@ public static class TelegramClient
                 if (e.Message == "stop") continue;
                 Console.WriteLine(e);
                 await botClient.SendMessageAsync(f.ChatId(), Arabic.UnkownError);
-                
             }
         }
     }

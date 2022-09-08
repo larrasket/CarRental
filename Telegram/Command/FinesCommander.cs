@@ -20,7 +20,9 @@ public partial class Commander
         await _billManager.Add(bill);
     }
 
-    public async Task AddFine(Update update) => await AddType(update, TypeOfBill.Fine);
-    public async Task AddHGS(Update update) => await AddType(update, TypeOfBill.HGS);
-    public async Task Maintenance(Update update) => await AddType(update, TypeOfBill.Maintenance);
+    public async Task Fine(Update update) => await AddType(update, TypeOfBill.Fine);
+    public async Task HGS(Update update) => await AddType(update, TypeOfBill.HGS);
+    public async Task RegularMaintenance(Update update) => await AddType(update, TypeOfBill.RegularMaintenance);
+    
+    public async Task CycleMaintenance(Update update) => await AddType(update, TypeOfBill.CycleMaintenance);
 }
