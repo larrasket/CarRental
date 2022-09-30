@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using System.Text;
 using Models.DataModels;
 using Telegram.BotAPI.AvailableMethods;
@@ -9,20 +10,20 @@ namespace Telegram.Command;
 public partial class Commander
 {
     private async Task<(Vehicle v, Update update)> ChooseVehicle(Update update, bool admin = false,
-        bool contracts = false, bool rents = false)
+        bool contracts = false, bool rents = false, params Expression<Func<Vehicle, Object>>[]? includeExp)
     {
         await ListVehicles(update, admin, contracts, rents);
         await _client.SendMessageAsync(update.ChatId(), Arabic.EnterNumber);
         update = await _client.MessageWatcher(update);
 
         var selected = update.Text()[1..];
-        var v = await _vehicleManager.First(x => x.Number == selected, x => x.Rents);
+        var v = await _vehicleManager.First(x => x.Number == selected, includeExp);
         if (contracts || rents) return (v, update)!;
         {
             while (v is null)
             {
                 update = await _client.MessageWatcher(update);
-                v = await _vehicleManager.First(x => x.Number == selected, x => x.Rents);
+                v = await _vehicleManager.First(x => x.Number == selected, includeExp);
             }
         }
 

@@ -17,13 +17,13 @@ public class MessageHandler
     {
         _client = client;
         _update = update;
-        _commander = new Command.Commander(_client);
+        _commander = new Command.Commander(_client, update.UserName());
         _openMessages = new OpenMessages(_client);
     }
 
     public async Task MainOpen()
     {
-        _update = await _openMessages.Usage(_update);
+        _update = await _openMessages.Usage(_update!);
         var f = true;
         while (f)
         {
@@ -64,9 +64,9 @@ public class MessageHandler
                 case "/fine":
                     await _commander.Fine(_update);
                     break;
-                case "/hgs":
-                    await _commander.HGS(_update);
-                    break;
+                // case "/hgs":
+                //     await _commander.HGS(_update);
+                //     break;
                 case "/mntnc":
                     await _commander.RegularMaintenance(_update);
                     break;

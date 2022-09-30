@@ -14,7 +14,7 @@ namespace Telegram.Languages
                                          "/add      - إضافة سيارة\n" +
                                          "/remove   - حذف سيارة\n" +
                                          "/list     - عرض السيارات\n" +
-                                         "/close    - العودة للقائمة الرئيسية\n";
+                                         "/cancel    - العودة للقائمة الرئيسية\n";
 
         public const string Usage = "قم بالاختيار بين:\n" +
                                     "/addrent      - إضافة إيجار جديد\n" +
@@ -24,7 +24,7 @@ namespace Telegram.Languages
                                     "/showall      - عرض جميع السيارات\n" +
                                     "/showcarsinrent - عرض السيارات الموجودة في إيجار حاليًا\n" +
                                     "/showcarsnotinrent - عرض السيارات غير الموجودة في إيجار حاليًا\n" +
-                                    "/hgs - إضافة اتش جي اس\n" +
+                                    // "/hgs - إضافة اتش جي اس\n" +
                                     "/fine - إضافة فاتورة\n" +
                                     "/mntnc - إضافة فاتورة صيانة\n" +
                                     "/cmntnc - إضافة فاتورة صيانة دورية\n";

@@ -8,7 +8,7 @@ using Telegram.Languages;
 
 public partial class Commander
 {
-    private readonly TypeManager<Vehicle> _vehicleManager = new TypeManager<Vehicle>();
+    private readonly DataManager<Vehicle> _vehicleManager;
 
     public async Task<Update> AddVehicle(Update update)
     {
@@ -39,9 +39,9 @@ public partial class Commander
         }
 
         vehicle.Number = update.Text();
-        vehicle.CreatedBy = update.UserName();
+        // vehicle.CreatedBy = update.UserName();
         var rs = await _vehicleManager.Add(vehicle);
-        if (rs != 1) throw new Exception();
+        if (rs <= 0) throw new Exception();
         return update;
     }
 

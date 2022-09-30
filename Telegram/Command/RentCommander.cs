@@ -8,11 +8,11 @@ namespace Telegram.Command;
 
 public partial class Commander
 {
-    private readonly TypeManager<Rent> _rentManager = new();
+    private readonly DataManager<Rent> _rentManager;
 
     public async Task AddRent(Update update)
     {
-        var (vehicle, update1) = await ChooseVehicle(update, true);
+        var (vehicle, update1) = await ChooseVehicle(update, true, includeExp: x => x.Rents);
         var rent = new Rent
         {
             VehicleId = vehicle.Id,
@@ -25,10 +25,9 @@ public partial class Commander
         (rent, update) = await ReadRentPrice(update, rent);
         (rent, update) = await ReadRentContract(update, rent);
         (rent, update) = await ReadRentDriver(update, rent);
-        rent.CreatedBy = update.UserName();
-        rent.Contract.CreatedBy = rent.CreatedBy;
+        // rent.CreatedBy = update.UserName();
+        // rent.Contract.CreatedBy = rent.CreatedBy;
         rent.Status = Status.Waiting;
-        rent.Contract.Type = TypeOfBill.Rent;
         var rs = await _rentManager.Add(rent);
         if (rs <= 0) throw new Exception();
         await _client.SendMessageAsync(update.ChatId(), Arabic.Rent.Added);
@@ -40,6 +39,7 @@ public partial class Commander
         var continued = update.Text()[5..];
         var rent = await _rentManager.First(x => x.Id == long.Parse(continued));
         rent.Status = Status.Cancelled;
+        rent.RentStart = rent.RentEnd = DateOnly.MinValue;
         await _rentManager.Save();
         await _client.SendMessageAsync(update.ChatId(), Arabic.Rent.Cancelled);
     }

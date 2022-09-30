@@ -1,16 +1,12 @@
 using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Models.DataModels;
 
 public class BaseModel
 {
     [Key] public long Id { get; set; }
-    public string CreatedBy { get; set; }
-    public DateTime CreatedDateTime { get; set; }
 
-    public BaseModel()
-    {
-        CreatedDateTime = DateTime.Now;
-    }
+    public Creator? Creation { get; set; }
 }

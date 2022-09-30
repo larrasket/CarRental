@@ -10,7 +10,7 @@ public partial class Commander
 {
     private async Task<Update> ChooseRent(Update update)
     {
-        var (vehicle, u) = await ChooseVehicle(update, rents: true);
+        var (vehicle, u) = await ChooseVehicle(update, rents: true, includeExp: x => x.Rents);
         update = u;
         while (!update.Text().Contains("/cont") && !update.Text().Contains("/rent"))
         {
@@ -124,7 +124,7 @@ public partial class Commander
         }
 
         (update, rent.Contract.Image) = await ReadPicture(update);
-    return (rent, update);
+        return (rent, update);
     }
 
     private async Task<(Update, string)> ReadPicture(Update update)

@@ -1,11 +1,19 @@
+using Models.DataModels;
+using Services;
 using Telegram.BotAPI;
-using Telegram.BotAPI.GettingUpdates;
 
 namespace Telegram.Command;
 
 public partial class Commander
 {
     private readonly BotClient _client;
-    
-    public Commander(BotClient client) => _client = client;
+    private static TelegramCreator _creator;
+
+    public Commander(BotClient client, string username)
+    {
+        _client = client;
+        _creator = new TelegramCreator(username);
+        _vehicleManager = new (_creator);
+        _rentManager = new(_creator);
+    }
 }

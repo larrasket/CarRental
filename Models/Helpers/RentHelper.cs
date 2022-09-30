@@ -13,7 +13,8 @@ public static class RentHelper
 
     public static bool ValidEndDay(this Rent rent)
     {
-        var next = rent.Vehicle.Rents.FirstOrDefault(x => x.Status != Status.Cancelled && x.RentStart > rent.RentEnd);
+        var next = rent.Vehicle.Rents.FirstOrDefault(x => x.Status != Status.Cancelled
+                                                          && x.RentStart > rent.RentEnd);
         if (next == null) return true;
         return rent.RentEnd < next.RentStart;
     }

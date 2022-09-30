@@ -1,8 +1,3 @@
-using System.Text;
-using Models.DataModels;
-using Models.Helpers;
-using Services;
-using Telegram.BotAPI;
 using Telegram.BotAPI.AvailableMethods;
 using Telegram.BotAPI.GettingUpdates;
 using Telegram.Languages;

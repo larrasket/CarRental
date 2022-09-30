@@ -1,5 +1,4 @@
 using Models.DataModels;
-using Services;
 using Telegram.BotAPI.AvailableMethods;
 using Telegram.BotAPI.GettingUpdates;
 using Telegram.Languages;
@@ -8,21 +7,59 @@ namespace Telegram.Command;
 
 public partial class Commander
 {
-    private readonly TypeManager<Bill> _billManager = new();
-
-    private async Task AddType(Update update, TypeOfBill typeOfBill)
+    internal enum AdditionType
     {
-        var bill = new Bill(type: typeOfBill);
-        await _client.SendMessageAsync(update.ChatId(), Arabic.EnterPrice);
-        (update, bill.Price) = await ReadPrice(update);
-        await _client.SendMessageAsync(update.ChatId(), Arabic.EnterPicture);
-        (_, bill.Image) = await ReadPicture(update);
-        await _billManager.Add(bill);
+        Fine,
+        Maintenance,
     }
 
-    public async Task Fine(Update update) => await AddType(update, TypeOfBill.Fine);
-    public async Task HGS(Update update) => await AddType(update, TypeOfBill.HGS);
-    public async Task RegularMaintenance(Update update) => await AddType(update, TypeOfBill.RegularMaintenance);
-    
-    public async Task CycleMaintenance(Update update) => await AddType(update, TypeOfBill.CycleMaintenance);
+
+    private async Task AddType(Update update, AdditionType additionType, TypeOfMaintenance? typeOfMaintenance = null)
+    {
+        await _client.SendMessageAsync(update.ChatId(), Arabic.EnterPrice);
+        (update, var price) = await ReadPrice(update);
+        (update, var image) = await ReadPicture(update);
+        var (vehicle, _) = await ChooseVehicle(update, includeExp: x => x.Fines, admin: true);
+        switch (additionType)
+        {
+            case AdditionType.Fine:
+                var fine = new Fine()
+                {
+                    Vehicle = vehicle,
+                    Bill = new()
+                    {
+                        Image = image,
+                        Price = price
+                    },
+                    Creation = _creator
+                };
+                vehicle.Fines.Add(fine);
+                break;
+            case AdditionType.Maintenance:
+                var maintenance = new Maintenance
+                {
+                    Type =typeOfMaintenance!.Value,
+                    Vehicle = vehicle,
+                    Bill =
+                    {
+                        Image = image,
+                        Price = price
+                    },
+                    Creation = _creator
+                };
+                vehicle.Maintenances.Add(maintenance);
+                break;
+        }
+
+        await _vehicleManager.Save();
+    }
+
+
+    public async Task Fine(Update update) => await AddType(update, AdditionType.Fine);
+
+    public async Task RegularMaintenance(Update update) =>
+        await AddType(update, AdditionType.Maintenance, TypeOfMaintenance.Regular);
+
+    public async Task CycleMaintenance(Update update) =>
+        await AddType(update, AdditionType.Maintenance, TypeOfMaintenance.Cycle);
 }
