@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Services;
@@ -11,9 +12,10 @@ using Services;
 namespace Services.Migrations
 {
     [DbContext(typeof(CycleContext))]
-    partial class CycleContextModelSnapshot : ModelSnapshot
+    [Migration("20220912214540_GenaricCreator")]
+    partial class GenaricCreator
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,7 +32,7 @@ namespace Services.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
-                    b.Property<long?>("CreationId")
+                    b.Property<long>("CreatorId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("Image")
@@ -41,7 +43,7 @@ namespace Services.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreationId");
+                    b.HasIndex("CreatorId");
 
                     b.ToTable("Bills");
                 });
@@ -98,7 +100,7 @@ namespace Services.Migrations
                     b.Property<long>("BillId")
                         .HasColumnType("bigint");
 
-                    b.Property<long?>("CreationId")
+                    b.Property<long>("CreatorId")
                         .HasColumnType("bigint");
 
                     b.Property<long>("VehicleId")
@@ -108,7 +110,7 @@ namespace Services.Migrations
 
                     b.HasIndex("BillId");
 
-                    b.HasIndex("CreationId");
+                    b.HasIndex("CreatorId");
 
                     b.HasIndex("VehicleId");
 
@@ -126,7 +128,7 @@ namespace Services.Migrations
                     b.Property<long>("BillId")
                         .HasColumnType("bigint");
 
-                    b.Property<long?>("CreationId")
+                    b.Property<long>("CreatorId")
                         .HasColumnType("bigint");
 
                     b.Property<int>("Type")
@@ -139,7 +141,7 @@ namespace Services.Migrations
 
                     b.HasIndex("BillId");
 
-                    b.HasIndex("CreationId");
+                    b.HasIndex("CreatorId");
 
                     b.HasIndex("VehicleId");
 
@@ -157,7 +159,7 @@ namespace Services.Migrations
                     b.Property<long>("BillId")
                         .HasColumnType("bigint");
 
-                    b.Property<long?>("CreationId")
+                    b.Property<long>("CreatorId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("Driver")
@@ -180,7 +182,7 @@ namespace Services.Migrations
 
                     b.HasIndex("BillId");
 
-                    b.HasIndex("CreationId");
+                    b.HasIndex("CreatorId");
 
                     b.HasIndex("VehicleId");
 
@@ -203,7 +205,7 @@ namespace Services.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<long?>("CreationId")
+                    b.Property<long>("CreatorId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("Model")
@@ -216,7 +218,7 @@ namespace Services.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreationId");
+                    b.HasIndex("CreatorId");
 
                     b.HasIndex("Number")
                         .IsUnique();
@@ -226,17 +228,19 @@ namespace Services.Migrations
 
             modelBuilder.Entity("Models.DataModels.Bill", b =>
                 {
-                    b.HasOne("Models.DataModels.Creator", "Creation")
+                    b.HasOne("Models.DataModels.Creator", "Creator")
                         .WithMany()
-                        .HasForeignKey("CreationId");
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("Creation");
+                    b.Navigation("Creator");
                 });
 
             modelBuilder.Entity("Models.DataModels.Creator", b =>
                 {
                     b.HasOne("Models.DataModels.ClientUser", "User")
-                        .WithMany("CreatedThings")
+                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -252,9 +256,11 @@ namespace Services.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Models.DataModels.Creator", "Creation")
+                    b.HasOne("Models.DataModels.Creator", "Creator")
                         .WithMany()
-                        .HasForeignKey("CreationId");
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Models.DataModels.Vehicle", "Vehicle")
                         .WithMany("Fines")
@@ -264,7 +270,7 @@ namespace Services.Migrations
 
                     b.Navigation("Bill");
 
-                    b.Navigation("Creation");
+                    b.Navigation("Creator");
 
                     b.Navigation("Vehicle");
                 });
@@ -277,9 +283,11 @@ namespace Services.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Models.DataModels.Creator", "Creation")
+                    b.HasOne("Models.DataModels.Creator", "Creator")
                         .WithMany()
-                        .HasForeignKey("CreationId");
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Models.DataModels.Vehicle", "Vehicle")
                         .WithMany("Maintenances")
@@ -289,7 +297,7 @@ namespace Services.Migrations
 
                     b.Navigation("Bill");
 
-                    b.Navigation("Creation");
+                    b.Navigation("Creator");
 
                     b.Navigation("Vehicle");
                 });
@@ -302,9 +310,11 @@ namespace Services.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Models.DataModels.Creator", "Creation")
+                    b.HasOne("Models.DataModels.Creator", "Creator")
                         .WithMany()
-                        .HasForeignKey("CreationId");
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Models.DataModels.Vehicle", "Vehicle")
                         .WithMany("Rents")
@@ -314,23 +324,20 @@ namespace Services.Migrations
 
                     b.Navigation("Contract");
 
-                    b.Navigation("Creation");
+                    b.Navigation("Creator");
 
                     b.Navigation("Vehicle");
                 });
 
             modelBuilder.Entity("Models.DataModels.Vehicle", b =>
                 {
-                    b.HasOne("Models.DataModels.Creator", "Creation")
+                    b.HasOne("Models.DataModels.Creator", "Creator")
                         .WithMany()
-                        .HasForeignKey("CreationId");
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("Creation");
-                });
-
-            modelBuilder.Entity("Models.DataModels.ClientUser", b =>
-                {
-                    b.Navigation("CreatedThings");
+                    b.Navigation("Creator");
                 });
 
             modelBuilder.Entity("Models.DataModels.Vehicle", b =>

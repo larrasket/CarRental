@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Services;
@@ -11,9 +12,10 @@ using Services;
 namespace Services.Migrations
 {
     [DbContext(typeof(CycleContext))]
-    partial class CycleContextModelSnapshot : ModelSnapshot
+    [Migration("20220923202408_auto generate id")]
+    partial class autogenerateid
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,7 +32,7 @@ namespace Services.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
-                    b.Property<long?>("CreationId")
+                    b.Property<long>("CreationId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("Image")
@@ -98,7 +100,7 @@ namespace Services.Migrations
                     b.Property<long>("BillId")
                         .HasColumnType("bigint");
 
-                    b.Property<long?>("CreationId")
+                    b.Property<long>("CreationId")
                         .HasColumnType("bigint");
 
                     b.Property<long>("VehicleId")
@@ -126,7 +128,7 @@ namespace Services.Migrations
                     b.Property<long>("BillId")
                         .HasColumnType("bigint");
 
-                    b.Property<long?>("CreationId")
+                    b.Property<long>("CreationId")
                         .HasColumnType("bigint");
 
                     b.Property<int>("Type")
@@ -157,7 +159,7 @@ namespace Services.Migrations
                     b.Property<long>("BillId")
                         .HasColumnType("bigint");
 
-                    b.Property<long?>("CreationId")
+                    b.Property<long>("CreationId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("Driver")
@@ -203,7 +205,7 @@ namespace Services.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<long?>("CreationId")
+                    b.Property<long>("CreationId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("Model")
@@ -228,7 +230,9 @@ namespace Services.Migrations
                 {
                     b.HasOne("Models.DataModels.Creator", "Creation")
                         .WithMany()
-                        .HasForeignKey("CreationId");
+                        .HasForeignKey("CreationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Creation");
                 });
@@ -254,7 +258,9 @@ namespace Services.Migrations
 
                     b.HasOne("Models.DataModels.Creator", "Creation")
                         .WithMany()
-                        .HasForeignKey("CreationId");
+                        .HasForeignKey("CreationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Models.DataModels.Vehicle", "Vehicle")
                         .WithMany("Fines")
@@ -279,7 +285,9 @@ namespace Services.Migrations
 
                     b.HasOne("Models.DataModels.Creator", "Creation")
                         .WithMany()
-                        .HasForeignKey("CreationId");
+                        .HasForeignKey("CreationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Models.DataModels.Vehicle", "Vehicle")
                         .WithMany("Maintenances")
@@ -304,7 +312,9 @@ namespace Services.Migrations
 
                     b.HasOne("Models.DataModels.Creator", "Creation")
                         .WithMany()
-                        .HasForeignKey("CreationId");
+                        .HasForeignKey("CreationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Models.DataModels.Vehicle", "Vehicle")
                         .WithMany("Rents")
@@ -323,7 +333,9 @@ namespace Services.Migrations
                 {
                     b.HasOne("Models.DataModels.Creator", "Creation")
                         .WithMany()
-                        .HasForeignKey("CreationId");
+                        .HasForeignKey("CreationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Creation");
                 });
