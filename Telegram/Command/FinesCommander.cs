@@ -23,7 +23,7 @@ public partial class Commander
         switch (additionType)
         {
             case AdditionType.Fine:
-                var fine = new Fine()
+                var fine = new Fine
                 {
                     Vehicle = vehicle,
                     Bill = new()
@@ -38,7 +38,7 @@ public partial class Commander
             case AdditionType.Maintenance:
                 var maintenance = new Maintenance
                 {
-                    Type =typeOfMaintenance!.Value,
+                    Type = typeOfMaintenance!.Value,
                     Vehicle = vehicle,
                     Bill =
                     {

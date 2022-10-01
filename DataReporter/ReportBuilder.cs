@@ -1,3 +1,5 @@
+using System.Diagnostics;
+using System.Globalization;
 using Microsoft.EntityFrameworkCore;
 using Models.DataModels;
 using Services;
@@ -8,41 +10,94 @@ public static class ReportBuilder
 {
     private static readonly DataManager<Vehicle> Manager = new(null);
 
-    public static void VehicleReport()
+    private static readonly FileInfo TemplateFile = new("blank.xlsx");
+
+    private static readonly FineReport HeadFineReport = new()
     {
-        var data = Manager.Db.Set<Vehicle>().Include(x => x.Fines).ThenInclude(x => x.Bill).Include(x => x.Rents)
-            .ThenInclude(x => x.Contract).Include(x => x.Maintenances).ThenInclude(x => x.Bill).AsEnumerable();
-        var templateFile = new FileInfo("blank.xlsx");
-        var outputFile = new FileInfo("out.xlsx ");
-        var tmp = new List<Headings>() {new Headings()};
-        var list = new List<VehicleReport>();
-        foreach (Vehicle vehicle in data)
-        {
-            var report = new VehicleReport();
-            report.CarNum = vehicle.Number;
-            report.Regular = vehicle.Maintenances.Where(x => x.Type == TypeOfMaintenance.Regular)
-                .Sum(x => x.Bill.Price);
-            report.Cycle = vehicle.Maintenances.Where(x => x.Type == TypeOfMaintenance.Cycle)
-                .Sum(x => x.Bill.Price);
-            report.Fines = vehicle.Fines.Sum(x => x.Bill.Price);
-            report.Total = vehicle.Rents.Sum(x => x.Contract.Price);
-            list.Add(report);
-        }
+        Id = "معرف الغرامة",
+        Date = "تاريخ الغرامة",
+        Total = "تكلفة الغرامة"
+    };
 
-        if (File.Exists(outputFile.Name)) File.Delete(outputFile.Name);
-        using var fastExcel = new FastExcel.FastExcel(templateFile, outputFile);
-        fastExcel.Write(tmp, "Sheet1");
-        // fastExcel.Write(list, "Sheet1");
+
+    private static readonly RentReport HeadRentReport = new()
+    {
+        StartDay = "موعد البداية",
+        EndDay = "موعد النهاية",
+        Total = "الدخل الكلي",
+        Id = "معرف الإيجار",
+        ContractId = "معرف عقد الإيجار",
+    };
+
+    private static readonly MaintenanceReport HeadMaintenanceReport = new()
+    {
+        Id = "معرف الصيانة",
+        Type = "نوع الصيانة",
+        Date = "تاريخ الصيانة",
+        Total = "تكلفة الصيانة",
+    };
+
+    public static void VehicleReport(string v)
+    {
+        Build(v);
+        var home = Environment.GetEnvironmentVariable("HOME");
+        var startInfo = new ProcessStartInfo()
+            {FileName = "/usr/bin/python3", Arguments = home + "/Merge/script.py",};
+        var proc = new Process {StartInfo = startInfo,};
+        proc.Start();
+        proc.WaitForExit();
     }
-}
 
-public class Headings
-{
-    // public const string StartDate = "موعد البداية";
-    // public const string EndDate = "موعد النهاية";
-    public const string CarNum = "رقم المركبة";
-    public const string Regular = "مصاريف صيانة استثنائية";
-    public const string Cycle = "مصاريف صيانة دورية";
-    public const string Fines = "مصاريف غرامات";
-    public const string Cost = "الدخل الكلي";
+    private static void Build(string v)
+    {
+        var home = Environment.GetEnvironmentVariable("HOME");
+        string f1 = home + "/Merge/files/1.xlsx";
+        string f2 = home + "/Merge/files/2.xlsx";
+        string f3 = home + "/Merge/files/3.xlsx";
+        string f5 = home + "/Merge/result.xlsx";
+        if (File.Exists(f1)) File.Delete(f1);
+        if (File.Exists(f2)) File.Delete(f2);
+        if (File.Exists(f3)) File.Delete(f3);
+        if (File.Exists(f5)) File.Delete(f5);
+        var data = Manager.Db.Set<Vehicle>().Where(x => x.Number == v)
+            .Include(x => x.Fines)
+            .ThenInclude(x => x.Bill)
+            .Include(x => x.Fines)
+            .ThenInclude(x => x.Creation)
+            .Include(x => x.Rents)
+            .ThenInclude(x => x.Contract).Include(x => x.Maintenances)
+            .ThenInclude(x => x.Bill)
+            .ThenInclude(x => x.Creation)
+            .First();
+        // rent reports
+        var rentReports = new List<RentReport> {HeadRentReport};
+        rentReports.AddRange(data.Rents.Select(rent => new RentReport
+        {
+            StartDay = rent.RentStart.ToString(),
+            EndDay = rent.RentEnd.ToString(),
+            Total = rent.Contract.Price.ToString(CultureInfo.InvariantCulture),
+            Id = rent.Id.ToString(),
+            ContractId = rent.Contract.Id.ToString()
+        }));
+        List<FineReport> fineReports = new() {HeadFineReport};
+        fineReports.AddRange(data.Fines.Select(fine => new FineReport
+        {
+            Date = fine.Creation?.CreatedDateTime.ToShortDateString(), Id = fine.Bill.Id.ToString(),
+            Total = fine.Bill.Price.ToString(CultureInfo.InvariantCulture)
+        }));
+        List<MaintenanceReport> maintenanceReports = new() {HeadMaintenanceReport};
+        maintenanceReports.AddRange(data.Maintenances.Select(maintenance => new MaintenanceReport
+        {
+            Date = maintenance.Creation?.CreatedDateTime.ToShortDateString(),
+            Id = maintenance.Bill.Id.ToString(),
+            Total = maintenance.Bill.Price.ToString(CultureInfo.InvariantCulture),
+            Type = maintenance.Type == TypeOfMaintenance.Cycle ? "صيانة دورية" : "صيانة استثنائية"
+        }));
+        using var fastExcel1 = new FastExcel.FastExcel(TemplateFile, new FileInfo(f1));
+        fastExcel1.Write(rentReports, "Sheet1");
+        using var fastExcel2 = new FastExcel.FastExcel(TemplateFile, new FileInfo(f2));
+        fastExcel2.Write(fineReports, "Sheet1");
+        using var fastExcel3 = new FastExcel.FastExcel(TemplateFile, new FileInfo(f3));
+        fastExcel3.Write(maintenanceReports, "Sheet1");
+    }
 }

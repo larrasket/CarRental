@@ -12,6 +12,7 @@
 
     <ItemGroup>
       <PackageReference Include="FastExcel" Version="3.0.13" />
+      <PackageReference Include="FreeSpire.XLS" Version="12.7.0" />
     </ItemGroup>
 
     <ItemGroup>

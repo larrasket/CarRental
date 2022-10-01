@@ -2,6 +2,7 @@ using Models.DataModels;
 using Telegram.BotAPI;
 using Telegram.BotAPI.AvailableMethods;
 using Telegram.BotAPI.GettingUpdates;
+using Telegram.Command;
 using Telegram.Languages;
 
 namespace Telegram;
@@ -64,14 +65,14 @@ public class MessageHandler
                 case "/fine":
                     await _commander.Fine(_update);
                     break;
-                // case "/hgs":
-                //     await _commander.HGS(_update);
-                //     break;
                 case "/mntnc":
                     await _commander.RegularMaintenance(_update);
                     break;
                 case "/cmntnc":
                     await _commander.CycleMaintenance(_update);
+                    break;
+                case "/report":
+                    await _commander.Report(_update);
                     break;
                 default:
                     f = true;

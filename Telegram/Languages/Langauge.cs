@@ -27,7 +27,8 @@ namespace Telegram.Languages
                                     // "/hgs - إضافة اتش جي اس\n" +
                                     "/fine - إضافة فاتورة\n" +
                                     "/mntnc - إضافة فاتورة صيانة\n" +
-                                    "/cmntnc - إضافة فاتورة صيانة دورية\n";
+                                    "/cmntnc - إضافة فاتورة صيانة دورية\n" +
+                                    "/report - الحصول على تقرير";
 
         public const string CarNumberAlreadyExist =
             "رقم السيارة مُستخدم بالفعل، من فضلك أدخل رقم جديد أو أدخل /cancel للرجوع للقائمة الرئيسية";

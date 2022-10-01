@@ -91,7 +91,7 @@ class Program
 
     static void Main()
     {
-        ReportBuilder.VehicleReport();
+        ReportBuilder.VehicleReport("41414");
     }
     
 }
