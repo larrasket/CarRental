@@ -71,7 +71,7 @@ public static class ReportBuilder
             .First();
         // rent reports
         var rentReports = new List<RentReport> {HeadRentReport};
-        rentReports.AddRange(data.Rents.Select(rent => new RentReport
+        rentReports.AddRange(data.Rents.Where(x => x.Status != Status.Cancelled).Select(rent => new RentReport
         {
             StartDay = rent.RentStart.ToString(),
             EndDay = rent.RentEnd.ToString(),
