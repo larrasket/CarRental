@@ -12,13 +12,13 @@ public class MessageHandler
     private readonly BotClient _client;
     private Update? _update;
     private readonly OpenMessages _openMessages;
-    private readonly Command.Commander _commander;
+    private readonly Commander _commander;
 
     public MessageHandler(BotClient client, Update? update)
     {
         _client = client;
         _update = update;
-        _commander = new Command.Commander(_client, update.UserName());
+        _commander = new Commander(_client, update.UserName());
         _openMessages = new OpenMessages(_client);
     }
 
@@ -73,6 +73,9 @@ public class MessageHandler
                     break;
                 case "/report":
                     await _commander.Report(_update);
+                    break;
+                case "/complete":
+                    await _commander.Complete(_update);
                     break;
                 default:
                     f = true;

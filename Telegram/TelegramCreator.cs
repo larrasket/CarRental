@@ -15,6 +15,7 @@ public sealed class TelegramCreator : Creator
         if (clientUser == null)
         {
             User = new ClientUser(clientId: Client.Telegram, userIdentifier: userName);
+            clientUsers?.Add(User);
         }
         else
         {

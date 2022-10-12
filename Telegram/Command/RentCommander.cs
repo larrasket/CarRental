@@ -25,8 +25,6 @@ public partial class Commander
         (rent, update) = await ReadRentPrice(update, rent);
         (rent, update) = await ReadRentContract(update, rent);
         (rent, update) = await ReadRentDriver(update, rent);
-        // rent.CreatedBy = update.UserName();
-        // rent.Contract.CreatedBy = rent.CreatedBy;
         rent.Status = Status.Waiting;
         var rs = await _rentManager.Add(rent);
         if (rs <= 0) throw new Exception();
@@ -57,7 +55,7 @@ public partial class Commander
     {
         update = await ChooseRent(update);
         var continued = update.Text()[5..];
-        var rent = await _rentManager.First(x => x.Id == long.Parse(continued), x => x.Vehicle);
+        var rent = await _rentManager.First(x => x.Id == long.Parse(continued), x => x.Contract);
         if (rent == null) throw new NullReferenceException();
 
         await _client.SendMessageAsync(update.ChatId(), Arabic.Rent.EditStartOrEnd);
@@ -70,16 +68,27 @@ public partial class Commander
 
         if (update.Text() == "/start")
         {
-            (_, rent.RentStart) = await ReadStartDate(update);
+            (update, rent.RentStart) = await ReadStartDate(update);
         }
         else
         {
             int n = -1;
-            (_, n) = await ReadEndDate(update);
+            (update, n) = await ReadEndDate(update);
             rent.RentEnd = rent.RentStart.AddDays(n);
         }
 
-        int f = await _rentManager.Save();
-        Console.WriteLine(f);
+        await _client.SendMessageAsync(update.ChatId(), Arabic.EnterPrice);
+        (_, rent.Contract.Price) = await ReadPrice(update);
+        await _rentManager.Save();
+        // Console.WriteLine(f);
+    }
+
+    public async Task Complete(Update update)
+    {
+        update = await ChooseRent(update);
+        var continued = update.Text()[5..];
+        var rent = await _rentManager.Find(long.Parse(continued), x => x.Contract);
+        if (rent != null) rent.Status = Status.Completed;
+        await _rentManager.Save();
     }
 }

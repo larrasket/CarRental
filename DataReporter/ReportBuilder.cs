@@ -51,9 +51,9 @@ public static class ReportBuilder
     private static void Build(string v)
     {
         var home = Environment.GetEnvironmentVariable("HOME");
-        string f1 = home + "/Merge/files/1.xlsx";
-        string f2 = home + "/Merge/files/2.xlsx";
-        string f3 = home + "/Merge/files/3.xlsx";
+        string f1 = home + "/Merge/files/rents.xlsx";
+        string f2 = home + "/Merge/files/fines.xlsx";
+        string f3 = home + "/Merge/files/maintenances.xlsx";
         string f5 = home + "/Merge/result.xlsx";
         if (File.Exists(f1)) File.Delete(f1);
         if (File.Exists(f2)) File.Delete(f2);
@@ -64,12 +64,20 @@ public static class ReportBuilder
             .ThenInclude(x => x.Bill)
             .Include(x => x.Fines)
             .ThenInclude(x => x.Creation)
+            
+            
+            
             .Include(x => x.Rents)
             .ThenInclude(x => x.Contract).Include(x => x.Maintenances)
             .ThenInclude(x => x.Bill)
+            
+            
+            
+            .Include(x => x.Rents)
+            .ThenInclude(x => x.Contract).Include(x => x.Maintenances)
             .ThenInclude(x => x.Creation)
+            
             .First();
-        // rent reports
         var rentReports = new List<RentReport> {HeadRentReport};
         rentReports.AddRange(data.Rents.Where(x => x.Status != Status.Cancelled).Select(rent => new RentReport
         {

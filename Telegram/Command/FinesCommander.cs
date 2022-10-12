@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using Models.DataModels;
 using Telegram.BotAPI.AvailableMethods;
 using Telegram.BotAPI.GettingUpdates;
@@ -19,7 +20,7 @@ public partial class Commander
         await _client.SendMessageAsync(update.ChatId(), Arabic.EnterPrice);
         (update, var price) = await ReadPrice(update);
         (update, var image) = await ReadPicture(update);
-        var (vehicle, _) = await ChooseVehicle(update, includeExp: x => x.Fines, admin: true);
+        var (vehicle, _) = await ChooseVehicle(update, true, false, false, x => x.Fines, x => x.Maintenances);
         switch (additionType)
         {
             case AdditionType.Fine:
@@ -40,7 +41,7 @@ public partial class Commander
                 {
                     Type = typeOfMaintenance!.Value,
                     Vehicle = vehicle,
-                    Bill =
+                    Bill = new Bill
                     {
                         Image = image,
                         Price = price

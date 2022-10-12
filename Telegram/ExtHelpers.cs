@@ -1,6 +1,7 @@
 using System.Net;
 using Models.DataModels;
 using Telegram.BotAPI;
+using Telegram.BotAPI.AvailableTypes;
 using Telegram.BotAPI.GettingUpdates;
 
 namespace Telegram;
@@ -30,7 +31,20 @@ public static class ExtHelpers
         while (true)
             if (updates.Any())
             {
-                if (updates.Last().Text() != "/cancel") return updates.Last();
+                var msg = updates.Last().Text();
+                if (!string.IsNullOrEmpty(msg))
+                {
+                    var index = msg.IndexOf("@", StringComparison.Ordinal);
+                    if (index >= 0)
+                    {
+                        msg = msg[..index];
+                        updates.Last().Message.Text = msg;
+                    }
+                }
+
+
+                if (msg != "/cancel")
+                    return updates.Last();
                 updates.Last().Message.Text = ".";
                 if (!start)
                     throw new Exception("stop");

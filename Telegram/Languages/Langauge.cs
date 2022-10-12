@@ -24,11 +24,11 @@ namespace Telegram.Languages
                                     "/showall      - عرض جميع السيارات\n" +
                                     "/showcarsinrent - عرض السيارات الموجودة في إيجار حاليًا\n" +
                                     "/showcarsnotinrent - عرض السيارات غير الموجودة في إيجار حاليًا\n" +
-                                    // "/hgs - إضافة اتش جي اس\n" +
-                                    "/fine - إضافة فاتورة\n" +
+                                    "/fine - إضافة غرامة\n" +
                                     "/mntnc - إضافة فاتورة صيانة\n" +
                                     "/cmntnc - إضافة فاتورة صيانة دورية\n" +
-                                    "/report - الحصول على تقرير";
+                                    "/report - الحصول على تقرير\n" +
+                                    "/complete - تسجيل استلام ايجار";
 
         public const string CarNumberAlreadyExist =
             "رقم السيارة مُستخدم بالفعل، من فضلك أدخل رقم جديد أو أدخل /cancel للرجوع للقائمة الرئيسية";
@@ -86,5 +86,11 @@ namespace Telegram.Languages
         public const string EnterPrice = "أدخل السعر";
         public const string EnterNumber = "إضغط على الرقم المراد";
         public const string EnterPicture = "أرسل الصورة";
+
+        public const string NotReceived = "لم يتم استلام المراكب التالية" +
+                                          "\n";
+
+        public const string TomorrowReceive = "تستلم غدًا" +
+                                              "\n";
     }
 }

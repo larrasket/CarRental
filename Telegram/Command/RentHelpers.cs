@@ -27,8 +27,7 @@ public partial class Commander
         await _client.SendMessageAsync(update.ChatId(), Arabic.Rent.EnterDate);
         update = await _client.MessageWatcher(update);
         var startDate = DateTime.Today;
-        //todo without year, and start with day
-        while (update.Text() != "/today" && !DateTime.TryParseExact(update.Text(), "yyyy-MM-dd",
+        while (update.Text() != "/today" && !DateTime.TryParseExact(update.Text(), "dd/MM/yyyy",
                    System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None,
                    out startDate))
         {

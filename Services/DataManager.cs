@@ -68,11 +68,11 @@ public class DataManager<T> : IManager<T> where T : BaseModel
     // TODO implement created by
     public async Task<int> Add(T i)
     {
-        i.Creation = new Creator();
-        if (Creator is not null)
-        {
-            i.Creation.UserId = Creator.User.Id;
-        }
+        // i.Creation = new Creator();
+        // if (Creator is not null)
+        // {
+        //     i.Creation.UserId = Creator.User.Id;
+        // }
 
         // await Db.Set<Creator>().AddAsync(i.Creation);
         // await Db.SaveChangesAsync();

@@ -21,4 +21,9 @@ public class TypeSimpleManager<T> where T : class
         var dbSet = _db.Set<T>();
         return Task.FromResult(dbSet.FirstOrDefault(func));
     }
+
+    public async Task Add(T i)
+    {
+        await _db.AddAsync(i);
+    }
 }

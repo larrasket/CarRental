@@ -39,7 +39,7 @@ public partial class Commander
         }
 
         vehicle.Number = update.Text();
-        // vehicle.CreatedBy = update.UserName();
+        vehicle.Creation = _creator;
         var rs = await _vehicleManager.Add(vehicle);
         if (rs <= 0) throw new Exception();
         return update;
