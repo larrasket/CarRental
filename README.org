@@ -1,0 +1,53 @@
+#+title: CarRental
+
+Car rental reservation services and bot API written in .NET, used to serve "Car of
+Istanbul", a Turkish car rental company.
+
+* Content
+The source code contains various separated projects that maintain all of the software
+services, contains a generic Telegram interface bot client. There is also a Python directory
+which is [[file:Merge/][Merge/]], it contains a simple scripted used to merge built reports from
+[[file:DataReporter/ReportBuilder.cs][DataReporter/ReportBuilder]].
+
+Currently the only implement client is [[file:Telegram/][Telegram]], using Telegram's official APIs.
+
+* Deployment
+To deploy the app without containerization, you must have a ~~/Merge~ directory in your
+server contains the mentioned Python script, and you need to install the following
+dependencies:
+#+begin_src shell
+sudo apt install python3-pip
+pip install openpyxl
+#+end_src
+
+For now there is no need for NginX or any web server. Just install the database server,
+PostgreSQl:
+
+#+begin_src shell
+sudo apt install wget ca-certificates
+wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main" >> /etc/apt/sources.list.d/pgdg.list'
+sudo apt update
+sudo apt install postgresql postgresql-contrib
+#+end_src
+
+Ensure that the services is running correctly:
+
+#+begin_src shell
+service postgresql status
+#+end_src
+
+#+RESULTS:
+: ● postgresql.service - PostgreSQL database server
+:     Loaded: loaded (/usr/lib/systemd/system/postgresql.service; enabled; preset: disabled)
+:     Active: active (running) since Wed 2022-10-12 04:51:27 EET; 3h 45min ago
+:    Process: 570 ExecStartPre=/usr/bin/postgresql-check-db-dir ${PGROOT}/data (code=exited, status=0/SUCCESS)
+:   Main PID: 576 (postgres)
+:      Tasks: 7 (limit: 9360)
+:     Memory: 3.6M
+:        CPU: 308ms
+:     CGroup: /system.slice/postgresql.service
+
+If you are going to use a systemd unit, you want to check ~DOTNET_CLI_HOME~ variable. Also
+move the Merge directory to root's home, since it will be runing at root. And install
+openpyxl again as root.
