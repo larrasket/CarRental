@@ -1,0 +1,6 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Publish Telegram To AWS" type="DotNetPublishAndUpload" factoryName="Publish to custom server">
+    <riderPublish configuration="Release" platform="Any CPU" produce_single_file="true" runtime="linux-x64" self_contained="true" server_id="9a240643-061e-41da-8913-ee640471225c" serverName="husam" target_framework="net6.0" uuid_high="415705870498153465" uuid_low="-8563574928311522163" />
+    <method v="2" />
+  </configuration>
+</component>

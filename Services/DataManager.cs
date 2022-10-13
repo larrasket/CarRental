@@ -34,7 +34,7 @@ public class DataManager<T> : IManager<T> where T : BaseModel
         HandleExpression(ref tdb, includeExp);
         return tdb!.AsQueryable();
     }
-    
+
 
     public IEnumerable<T> Where(Func<T, bool> func, Expression<Func<T, Object>>? includeExp = null)
     {
@@ -78,6 +78,17 @@ public class DataManager<T> : IManager<T> where T : BaseModel
         // await Db.SaveChangesAsync();
         // long id = i.Creation.Id;
         // i.Creation.Id = id;
+
+        if (i.Creation != null)
+        {
+            var id = i.Creation.User.Id;
+            var newUser = await Db.ClientUsers.FindAsync(id);
+            if (newUser != null)
+            {
+                i.Creation.User = newUser;
+            }
+        }
+
         await Db.Set<T>().AddAsync(i);
         return await Db.SaveChangesAsync();
     }

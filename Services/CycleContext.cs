@@ -6,7 +6,8 @@ namespace Services;
 public class CycleContext : DbContext
 {
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseNpgsql(LocalReader.GetObj("ConnectionString"));
+        // => optionsBuilder.UseNpgsql(LocalReader.GetObj("ConnectionString"));
+        => optionsBuilder.UseNpgsql(LocalReader.GetObj("ProductionString"));
 
     protected override void OnModelCreating(ModelBuilder builder) =>
         builder.Entity<Vehicle>()
