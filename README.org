@@ -2,14 +2,15 @@
 
 Car rental reservation services and bot API written in .NET, used to serve "Car of
 Istanbul", a Turkish car rental company.
-
+-----
+[[file:demo.mp4][Telegram client demo]]
 * Content
 The source code contains various separated projects that maintain all of the software
-services, contains a generic Telegram interface bot client. There is also a Python directory
+services and contains a generic Telegram interface bot client. There is also a Python directory
 which is [[file:Merge/][Merge/]], it contains a simple scripted used to merge built reports from
 [[file:DataReporter/ReportBuilder.cs][DataReporter/ReportBuilder]].
 
-Currently the only implement client is [[file:Telegram/][Telegram]], using Telegram's official APIs.
+Currently, the only implemented client is [[file:Telegram/][Telegram]], using Telegram's official APIs.
 
 * Deployment
 To deploy the app without containerization, you must have a ~~/Merge~ directory in your
